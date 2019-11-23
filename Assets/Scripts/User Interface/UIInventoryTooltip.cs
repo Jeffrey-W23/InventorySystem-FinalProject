@@ -10,51 +10,54 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 //--------------------------------------------------------------------------------------
 // f
 //--------------------------------------------------------------------------------------
-public class Item
+public class UIInventoryTooltip : MonoBehaviour
 {
     //
-    public int m_nId;
-
-    //
-    public string m_strTitle;
-
-    //
-    public string m_strDescription;
-
-    //
-    public Sprite m_sIcon;
-
-    //
-    public Dictionary<string, int> m_dStats = new Dictionary<string, int>();
-
+    private Text m_tTooltip;
 
     //--------------------------------------------------------------------------------------
     // f
     //--------------------------------------------------------------------------------------
-    public Item(int nId, string strTitle, string strDescription, Dictionary<string, int> dStats)
+    void Start()
     {
         //
-        m_nId = nId;
-        m_strTitle = strTitle;
-        m_strDescription = strDescription;
-        m_sIcon = Resources.Load<Sprite>("Sprites/Items/" + strTitle);
-        m_dStats = dStats;
+        m_tTooltip = GetComponentInChildren<Text>();
+
+        //
+        gameObject.SetActive(false);
     }
 
     //--------------------------------------------------------------------------------------
     // f
     //--------------------------------------------------------------------------------------
-    public Item(Item oItem)
+    public void GenerateTooltip(Item oItem)
     {
         //
-        m_nId = oItem.m_nId;
-        m_strTitle = oItem.m_strTitle;
-        m_strDescription = oItem.m_strDescription;
-        m_sIcon = Resources.Load<Sprite>("Sprites/Items/" + oItem.m_strTitle);
-        m_dStats = oItem.m_dStats;
+        string strStats = "";
+
+        //
+        if (oItem.m_dStats.Count > 0)
+        {
+            //
+            foreach (var i in oItem.m_dStats)
+            {
+                //
+                strStats += i.Key.ToString() + ": " + i.Value.ToString() + "\n";
+            }
+        }
+
+        //
+        string strTooltip = string.Format("<b>{0}</b>\n{1}\n\n<b>{2}</b>", oItem.m_strTitle, oItem.m_strDescription, strStats);
+
+        //
+        m_tTooltip.text = strTooltip;
+
+        //
+        gameObject.SetActive(true);
     }
 }

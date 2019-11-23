@@ -29,6 +29,10 @@ public class Player : MonoBehaviour
     [LabelOverride("Running Speed")] [Tooltip("The speed of which the player will run in float value.")]
     public float m_fRunSpeed = 7.0f;
 
+    // public float value for max exhaust level.
+    [LabelOverride("Running Exhaust")] [Tooltip("The max level of exhaustion the player can handle before running is false.")]
+    public float m_fRunExhaust = 3.0f;
+
     // Leave a space in the inspector.
     [Space]
     //--------------------------------------------------------------------------------------
@@ -53,6 +57,12 @@ public class Player : MonoBehaviour
 
     // private float for the current speed of the player.
     private float m_fCurrentSpeed;
+
+    // private flkoat for the current exhaust level of the player.
+    private float m_fRunCurrentExhaust = 0.0f;
+
+    // private bool for if ther player can run or not
+    private bool m_bExhausted = false;
 
     // private gameobject for the players arm object
     private GameObject m_gArm;
@@ -135,17 +145,39 @@ public class Player : MonoBehaviour
         m_rbRigidBody.MovePosition(transform.position + v2MovementDirection * m_fCurrentSpeed * Time.fixedDeltaTime);
 
         // if the players holds down left shift
-        if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift) && !m_bExhausted)
         {
             // current player speed equals run speed
             m_fCurrentSpeed = m_fRunSpeed;
+
+            // tick the current exhaust level up 
+            m_fRunCurrentExhaust += Time.deltaTime;
+
+            // if the current exhaust is above the max
+            if (m_fRunCurrentExhaust > m_fRunExhaust)
+            {
+                // player is exhausted and speed is now walking.
+                m_bExhausted = true;
+                m_fCurrentSpeed = m_fWalkSpeed;
+            }
         }
 
         // else if shift isnt down
-        else
+        else if (!Input.GetKey(KeyCode.LeftShift))
         {
             // current speed is walking speed.
             m_fCurrentSpeed = m_fWalkSpeed;
+
+            // tick the current exhaust level down 
+            m_fRunCurrentExhaust -= Time.deltaTime;
+
+            // if the current exhaust is below 0 keep at 0
+            if (m_fRunCurrentExhaust < 0.0f)
+                m_fRunCurrentExhaust = 0.0f;
+
+            // if the current exhaust is below the max then exhausted false
+            if (m_fRunCurrentExhaust < m_fRunExhaust)
+                m_bExhausted = false;
         }
     }
 

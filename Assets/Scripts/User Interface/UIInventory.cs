@@ -14,10 +14,19 @@ using UnityEngine;
 //--------------------------------------------------------------------------------------
 // f
 //--------------------------------------------------------------------------------------
-public class ItemDatabase : MonoBehaviour
+public class UIInventory : MonoBehaviour
 {
     //
-    public List<Item> m_aoItems = new List<Item>();
+    public List<UIItem> m_aoUIItems = new List<UIItem>();
+
+    //
+    public GameObject m_gSlotPrefab;
+
+    //
+    public Transform m_tSlotPanel;
+
+    //
+    public int m_nSlots = 4;
 
     //--------------------------------------------------------------------------------------
     // f
@@ -25,75 +34,43 @@ public class ItemDatabase : MonoBehaviour
     private void Awake()
     {
         //
-        BuildDatabase();
-    }
-
-    //--------------------------------------------------------------------------------------
-    // f
-    //--------------------------------------------------------------------------------------
-    public Item GetItem(int nId)
-    {
-        //
-        return m_aoItems.Find(item => item.m_nId == nId);
-    }
-
-    //--------------------------------------------------------------------------------------
-    // f
-    //--------------------------------------------------------------------------------------
-    public Item GetItem(string strTitle)
-    {
-        //
-        return m_aoItems.Find(item => item.m_strTitle == strTitle);
-    }
-
-    //--------------------------------------------------------------------------------------
-    // f
-    //--------------------------------------------------------------------------------------
-    void BuildDatabase()
-    {
-        //
-        m_aoItems = new List<Item>()
+        for (int i = 0; i < m_nSlots; i++)
         {
             //
-            new Item
-            (
-                //
-                0, "Diamond Sword", "A Sword made with diamond.",
-                
-                //
-                new Dictionary<string, int>
-                {
-                    {"Power", 15},
-                    {"Defence", 10},
-                }
-            ),
+            GameObject gInstance = Instantiate(m_gSlotPrefab);
 
             //
-            new Item
-            (
-                //
-                1, "Diamond Ore", "A beautfiul diamond",
-                
-                //
-                new Dictionary<string, int>
-                {
-                    {"Value", 444}
-                }
-            ),
+            gInstance.transform.SetParent(m_tSlotPanel);
 
             //
-            new Item
-            (
-                //
-                2, "Silver Pick", "A very C# pick",
-                
-                //
-                new Dictionary<string, int>
-                {
-                    {"Power", 5},
-                    {"Mining", 333}
-                }
-            )
-        };
+            m_aoUIItems.Add(gInstance.GetComponentInChildren<UIItem>());
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    public void UpdateSlot(int nSlot, Item oItem)
+    {
+        //
+        m_aoUIItems[nSlot].UpdateItem(oItem);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    public void AddItem(Item oItem)
+    {
+        //
+        UpdateSlot(m_aoUIItems.FindIndex(i => i.m_oItem == null), oItem);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    public void RemoveItem(Item oItem)
+    {
+        //
+        UpdateSlot(m_aoUIItems.FindIndex(i => i.m_oItem == oItem), null);
     }
 }

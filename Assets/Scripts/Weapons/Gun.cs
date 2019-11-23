@@ -32,7 +32,19 @@ public class Gun : MonoBehaviour
     // Leave a space in the inspector.
     [Space]
     //--------------------------------------------------------------------------------------
-    
+
+
+
+
+
+
+    public GameObject m_gBulletSpawn;
+
+
+
+
+
+
     // PRIVATE VALUES //
     //--------------------------------------------------------------------------------------
     // An Array of GameObjects for bullets.
@@ -61,6 +73,16 @@ public class Gun : MonoBehaviour
     //--------------------------------------------------------------------------------------
     protected void Update()
     {
+
+
+
+
+
+
+
+
+
+
         // If the mouse is pressed.
         if (Input.GetMouseButtonDown(0))
         {
@@ -71,8 +93,8 @@ public class Gun : MonoBehaviour
             if (gBullet)
             {
                 // Update the postion, rotation and set direction of the bullet.
-                gBullet.transform.position = transform.position;
-                gBullet.transform.rotation = transform.rotation;
+                gBullet.transform.position = m_gBulletSpawn.transform.position;
+                gBullet.transform.rotation = m_gBulletSpawn.transform.rotation;
                 gBullet.GetComponent<Bullet>().SetDirection(transform.right);
             }
         }

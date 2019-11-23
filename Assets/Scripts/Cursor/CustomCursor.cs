@@ -1,7 +1,8 @@
 ﻿//--------------------------------------------------------------------------------------
 // Purpose: Sets the cursor of the scene.
 //
-// Description: 
+// Description: Script is used for easily setting the cursor of the current scene.
+// Script takes in a public texture and set the hotpoint to center.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------

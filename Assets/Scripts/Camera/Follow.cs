@@ -1,7 +1,8 @@
 ﻿//--------------------------------------------------------------------------------------
 // Purpose: Sets an object for the camera to follow.
 //
-// Description: 
+// Description: Script takes in a target game object for the camera to follow. Main
+// purpose for following the player around the screen.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------
