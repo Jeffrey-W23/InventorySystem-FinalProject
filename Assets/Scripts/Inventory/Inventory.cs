@@ -10,6 +10,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 //--------------------------------------------------------------------------------------
 // f
@@ -25,6 +26,9 @@ public class Inventory : MonoBehaviour
     //
     public UIInventory m_gInventoryUI;
 
+    //
+    public bool m_bToggleableUI;
+
     //--------------------------------------------------------------------------------------
     // f
     //--------------------------------------------------------------------------------------
@@ -36,7 +40,8 @@ public class Inventory : MonoBehaviour
         GiveItem(2);
 
         //
-        m_gInventoryUI.gameObject.SetActive(false);
+        m_gInventoryUI.m_tSlotPanel.SetActive(false);
+        m_gInventoryUI.GetComponent<Image>().enabled = false;
     }
 
     //--------------------------------------------------------------------------------------
@@ -45,10 +50,19 @@ public class Inventory : MonoBehaviour
     public void Update()
     {
         //
-        if (Input.GetKeyDown(KeyCode.I))
+        if (Input.GetKeyDown(KeyCode.I) && m_bToggleableUI)
         {
             //
-            m_gInventoryUI.gameObject.SetActive(!m_gInventoryUI.gameObject.activeSelf);
+            m_gInventoryUI.m_tSlotPanel.SetActive(!m_gInventoryUI.m_tSlotPanel.activeSelf);
+            m_gInventoryUI.GetComponent<Image>().enabled = !m_gInventoryUI.GetComponent<Image>().enabled;
+        }
+
+        //
+        if (!m_bToggleableUI)
+        {
+            //
+            m_gInventoryUI.m_tSlotPanel.SetActive(true);
+            m_gInventoryUI.GetComponent<Image>().enabled = true;
         }
     }
 
@@ -100,10 +114,41 @@ public class Inventory : MonoBehaviour
     //--------------------------------------------------------------------------------------
     // f
     //--------------------------------------------------------------------------------------
+    public Item CheckForItem(string strTitle)
+    {
+        //
+        return m_aoItems.Find(item => item.m_strTitle == strTitle);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
     public void RemoveItem(int nId)
     {
         //
         Item oItem = CheckForItem(nId);
+
+        //
+        if (oItem != null)
+        {
+            //
+            m_aoItems.Remove(oItem);
+
+            //
+            m_gInventoryUI.RemoveItem(oItem);
+
+            //
+            Debug.Log("Item Removed:" + oItem.m_strTitle);
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    public void RemoveItem(string strTitle)
+    {
+        //
+        Item oItem = CheckForItem(strTitle);
 
         //
         if (oItem != null)

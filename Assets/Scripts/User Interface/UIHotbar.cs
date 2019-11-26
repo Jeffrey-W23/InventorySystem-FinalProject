@@ -14,8 +14,11 @@ using UnityEngine;
 //--------------------------------------------------------------------------------------
 // f
 //--------------------------------------------------------------------------------------
-public class UIInventory : MonoBehaviour
+public class UIHotbar : MonoBehaviour
 {
+    //
+    public UIInventory m_gInventoryUI;
+
     //
     public List<UIItem> m_aoUIItems = new List<UIItem>();
 
@@ -41,18 +44,10 @@ public class UIInventory : MonoBehaviour
 
             //
             gInstance.transform.SetParent(m_tSlotPanel.transform);
-
-            //
-            m_aoUIItems.Add(gInstance.GetComponentInChildren<UIItem>());
         }
-    }
 
-    void Update()
-    {
-        if (m_aoUIItems.Count > 0)
-        { 
-        
-        }
+        //
+        m_aoUIItems = m_gInventoryUI.m_aoUIItems;
     }
 
     //--------------------------------------------------------------------------------------
