@@ -10,157 +10,93 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 //--------------------------------------------------------------------------------------
 // f
 //--------------------------------------------------------------------------------------
-public class Inventory : MonoBehaviour
+public class Inventory
 {
     //
-    public List<Item> m_aoItems = new List<Item>();
-
-    //
-    public ItemDatabase m_oItemDatabase;
-
-    //
-    public UIInventory m_gInventoryUI;
-
-    //
-    public bool m_bToggleableUI;
+    private List<ItemStack> m_aoItems = new List<ItemStack>();
 
     //--------------------------------------------------------------------------------------
     // f
     //--------------------------------------------------------------------------------------
-    private void Start()
+    public Inventory(int nSize)
     {
-        //
-        GiveItem(0);
-        GiveItem(1);
-        GiveItem(2);
-
-        //
-        m_gInventoryUI.m_tSlotPanel.SetActive(false);
-        m_gInventoryUI.GetComponent<Image>().enabled = false;
-    }
-
-    //--------------------------------------------------------------------------------------
-    // f
-    //--------------------------------------------------------------------------------------
-    public void Update()
-    {
-        //
-        if (Input.GetKeyDown(KeyCode.I) && m_bToggleableUI)
+        // loop through the inventory size
+        for (int i = 0; i < nSize; i++)
         {
-            //
-            m_gInventoryUI.m_tSlotPanel.SetActive(!m_gInventoryUI.m_tSlotPanel.activeSelf);
-            m_gInventoryUI.GetComponent<Image>().enabled = !m_gInventoryUI.GetComponent<Image>().enabled;
-        }
-
-        //
-        if (!m_bToggleableUI)
-        {
-            //
-            m_gInventoryUI.m_tSlotPanel.SetActive(true);
-            m_gInventoryUI.GetComponent<Image>().enabled = true;
+            // add an item stack for every item
+            m_aoItems.Add(new ItemStack(i));
         }
     }
 
     //--------------------------------------------------------------------------------------
     // f
     //--------------------------------------------------------------------------------------
-    public void GiveItem(int nId)
+    public bool AddItem(ItemStack oStack)
     {
-        //
-        Item oItem = m_oItemDatabase.GetItem(nId);
-
-        //
-        m_aoItems.Add(oItem);
-
-        //
-        m_gInventoryUI.AddItem(oItem);
-
-        //
-        Debug.Log("Added Item: " + oItem.m_strTitle);
-    }
-
-    //--------------------------------------------------------------------------------------
-    // f
-    //--------------------------------------------------------------------------------------
-    public void GiveItem(string strTitle)
-    {
-        //
-        Item oItem = m_oItemDatabase.GetItem(strTitle);
-
-        //
-        m_aoItems.Add(oItem);
-
-        //
-        m_gInventoryUI.AddItem(oItem);
-
-        //
-        Debug.Log("Added Item: " + oItem.m_strTitle);
-    }
-
-    //--------------------------------------------------------------------------------------
-    // f
-    //--------------------------------------------------------------------------------------
-    public Item CheckForItem(int nId)
-    {
-        //
-        return m_aoItems.Find(item => item.m_nId == nId);
-    }
-
-    //--------------------------------------------------------------------------------------
-    // f
-    //--------------------------------------------------------------------------------------
-    public Item CheckForItem(string strTitle)
-    {
-        //
-        return m_aoItems.Find(item => item.m_strTitle == strTitle);
-    }
-
-    //--------------------------------------------------------------------------------------
-    // f
-    //--------------------------------------------------------------------------------------
-    public void RemoveItem(int nId)
-    {
-        //
-        Item oItem = CheckForItem(nId);
-
-        //
-        if (oItem != null)
+        // loop through each item stack in the inventory
+        foreach (ItemStack i in m_aoItems)
         {
-            //
-            m_aoItems.Remove(oItem);
+            // is the stack empty
+            if (i.IsStackEmpty())
+            {
+                // set the stack to passed in stack
+                i.SetStack(oStack);
 
-            //
-            m_gInventoryUI.RemoveItem(oItem);
+                // return true, item added
+                return true;
+            }
 
-            //
-            Debug.Log("Item Removed:" + oItem.m_strTitle);
+            // is the stack equal to passed in stack
+            if (ItemStack.AreItemsEqual(oStack, i))
+            {
+                // is it possible to add items to this stack
+                if (i.IsItemAddable(oStack.GetItemCount()))
+                {
+                    // increase the stack count
+                    i.IncreaseStack(oStack.GetItemCount());
+
+                    // return true, item added
+                    return true;
+                }
+
+                // else if the item is not addable
+                else
+                {
+                    // new int var, get the difference between passed in stack and current stack
+                    int nDifference = (i.GetItemCount() + oStack.GetItemCount()) - i.GetItem().m_nMaxStackSize;
+
+                    // set the count of the stack to the max stack size of the stacks item
+                    i.SetItemCount(i.GetItem().m_nMaxStackSize);
+
+                    // set the count of the passed in stack to the stack differnce
+                    oStack.SetItemCount(nDifference);
+                }
+            }
         }
+
+        // return false, item not added.
+        return false;
     }
 
     //--------------------------------------------------------------------------------------
     // f
     //--------------------------------------------------------------------------------------
-    public void RemoveItem(string strTitle)
+    public ItemStack GetStackInSlot(int nIndex)
     {
-        //
-        Item oItem = CheckForItem(strTitle);
+        // return stack from index
+        return m_aoItems[nIndex];
+    }
 
-        //
-        if (oItem != null)
-        {
-            //
-            m_aoItems.Remove(oItem);
-
-            //
-            m_gInventoryUI.RemoveItem(oItem);
-
-            //
-            Debug.Log("Item Removed:" + oItem.m_strTitle);
-        }
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    public List<ItemStack> GetInventory()
+    {
+        // return the inventory
+        return m_aoItems;
     }
 }

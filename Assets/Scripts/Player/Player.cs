@@ -88,6 +88,40 @@ public class Player : MonoBehaviour
     private GameObject m_gPistol;
     // REMOVE // TEMP // REMOVE //
 
+
+
+
+
+
+
+
+
+    public Item[] itemsToAdd;
+
+    //
+    public Inventory m_oInventory = new Inventory(18);
+
+    //
+    private bool m_bIsInventoryOpen;
+
+    //
+    private int m_nSelectedHotbarIndex = 0;
+
+    //
+    private int m_nPreviousSelectedHotbarIndex;
+
+    //
+    private KeyCode[] m_akHotbarControls = new KeyCode[] { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3 };
+
+
+
+
+
+
+
+
+
+
     //--------------------------------------------------------------------------------------
     // initialization
     //--------------------------------------------------------------------------------------
@@ -109,19 +143,48 @@ public class Player : MonoBehaviour
         // REMOVE // TEMP // REMOVE //
     }
 
+
+
+
+
+
+
+
+
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    private void Start()
+    {
+        // for each item in items to add
+        foreach (Item i in itemsToAdd)
+        {
+            // add an item to the inventory
+            m_oInventory.AddItem(new ItemStack(i, 1));
+        }
+
+        // open player hotbar
+        InventoryManager.m_gInstance.OpenContainer(new PlayerHotbarContainer(null, m_oInventory, 3));
+
+        // set the inventory open bool to false
+        m_bIsInventoryOpen = false;
+    }
+
+
+
+
+
     //--------------------------------------------------------------------------------------
     // FixedUpdate: Function that calls each frame to update game objects.
     //--------------------------------------------------------------------------------------
     void FixedUpdate()
     {
-        // Run the interaction function
-        Interaction();
-
         // rotate player based on mouse postion.
         Rotate();
 
         // run the movement function to move player.
-        Movement();
+        Movement();      
     }
 
     //--------------------------------------------------------------------------------------
@@ -132,6 +195,30 @@ public class Player : MonoBehaviour
         // move arm with mouse movement
         MoveArm();
     }
+
+
+
+
+
+
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    private void Update()
+    {
+        // Run the interaction function
+        Interaction();
+
+        //
+        OpenCloseInventory();
+    }
+
+
+
+
+
+
 
     //--------------------------------------------------------------------------------------
     // Movement:
@@ -225,6 +312,154 @@ public class Player : MonoBehaviour
             m_gArm.transform.rotation = Quaternion.AngleAxis(fAngle, Vector3.forward);
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    private void OpenCloseInventory()
+    {
+        // if the i key is down
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            // if the inventory bool is false
+            if (!m_bIsInventoryOpen)
+            {
+                // Open the player inventory
+                InventoryManager.m_gInstance.OpenContainer(new PlayerContainer(null, m_oInventory, 6));
+
+                // set the inventory open bool to true
+                m_bIsInventoryOpen = true;
+
+                //
+                HideSelectedHotbar();
+            }
+
+            // else if no key down
+            else
+            {
+                // close the player inventory and open hotbar
+                InventoryManager.m_gInstance.OpenContainer(new PlayerHotbarContainer(null, m_oInventory, 3));
+
+                // set the inventory open bool to false
+                m_bIsInventoryOpen = false;
+
+                //
+                m_nSelectedHotbarIndex = m_nPreviousSelectedHotbarIndex;
+            }
+        }
+
+        // if the esc key is down
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            // if the inventory bool is false
+            if (m_bIsInventoryOpen)
+            {
+                // close the player inventory and open hotbar
+                InventoryManager.m_gInstance.OpenContainer(new PlayerHotbarContainer(null, m_oInventory, 3));
+
+                // set the inventory open bool to false
+                m_bIsInventoryOpen = false;
+
+                //
+                m_nSelectedHotbarIndex = m_nPreviousSelectedHotbarIndex;
+            }
+        }
+
+        //
+        MoveSelectedHotbarIndex(Input.GetAxis("Mouse ScrollWheel"));
+
+        //
+        for (int i = 0; i < m_akHotbarControls.Length; i++)
+        {
+            //
+            if (Input.GetKeyDown(m_akHotbarControls[i]) && !m_bIsInventoryOpen)
+            {
+                //
+                m_nSelectedHotbarIndex = i;
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    private void MoveSelectedHotbarIndex(float nDirection)
+    {
+        //
+        if (!m_bIsInventoryOpen)
+        {
+            //
+            if (nDirection > 0)
+            {
+                //
+                nDirection = 1;
+            }
+
+            //
+            if (nDirection < 0)
+            {
+                //
+                nDirection = -1;
+            }
+
+            //
+            for (m_nSelectedHotbarIndex -= (int)nDirection; m_nSelectedHotbarIndex < 0; m_nSelectedHotbarIndex += 3) ;
+
+            //
+            while (m_nSelectedHotbarIndex >= 3)
+            {
+                //
+                m_nSelectedHotbarIndex -= 3;
+            }
+        }
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    public void HideSelectedHotbar()
+    {
+        //
+        m_nPreviousSelectedHotbarIndex = m_nSelectedHotbarIndex;
+
+        //
+        m_nSelectedHotbarIndex = 4;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    public int GetSelectedHotbarIndex()
+    {
+        //
+        return m_nSelectedHotbarIndex;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //--------------------------------------------------------------------------------------
     // Interaction: Function interacts on button press with interactables objects.
