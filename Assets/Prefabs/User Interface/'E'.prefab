@@ -81,7 +81,7 @@ TextMesh:
   m_GameObject: {fileID: 1679405585977362}
   m_Text: '''E'''
   m_OffsetZ: 0
-  m_CharacterSize: 2
+  m_CharacterSize: 0.3
   m_LineSpacing: 1
   m_Anchor: 0
   m_Alignment: 0
