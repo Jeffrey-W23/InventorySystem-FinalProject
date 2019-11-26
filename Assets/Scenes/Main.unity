@@ -237,6 +237,28 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8459221049482635966, guid: d654363e72adbb04abea319220f915a4,
+        type: 3}
+      propertyPath: m_aoContainers.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8459221049482635966, guid: d654363e72adbb04abea319220f915a4,
+        type: 3}
+      propertyPath: m_aoContainers.Array.data[0].m_gPrefab
+      value: 
+      objectReference: {fileID: 8710591016219208359, guid: 6d17d6e5707ab1c4abeb007bb589d5d4,
+        type: 3}
+    - target: {fileID: 8459221049482635966, guid: d654363e72adbb04abea319220f915a4,
+        type: 3}
+      propertyPath: m_aoContainers.Array.data[2].m_strTitle
+      value: Chest Inventory
+      objectReference: {fileID: 0}
+    - target: {fileID: 8459221049482635966, guid: d654363e72adbb04abea319220f915a4,
+        type: 3}
+      propertyPath: m_aoContainers.Array.data[2].m_gPrefab
+      value: 
+      objectReference: {fileID: 8344222661475298868, guid: b28607e0b45f1a7439130754ab358759,
+        type: 3}
     - target: {fileID: 8459221049386384220, guid: d654363e72adbb04abea319220f915a4,
         type: 3}
       propertyPath: m_SizeDelta.x

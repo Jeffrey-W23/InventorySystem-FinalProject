@@ -99,10 +99,7 @@ public class Player : MonoBehaviour
     public Item[] itemsToAdd;
 
     //
-    public Inventory m_oInventory = new Inventory(18);
-
-    //
-    private bool m_bIsInventoryOpen;
+    public Inventory m_oInventory = new Inventory(9);
 
     //
     private int m_nSelectedHotbarIndex = 0;
@@ -138,8 +135,8 @@ public class Player : MonoBehaviour
 
         // REMOVE // TEMP // REMOVE //
         // Set the parenting of pistol prefab.
-        m_gPistol = Instantiate(m_gWeaponPrefab);
-        m_gPistol.transform.parent = m_gArm.transform;
+        //m_gPistol = Instantiate(m_gWeaponPrefab);
+        //m_gPistol.transform.parent = m_gArm.transform;
         // REMOVE // TEMP // REMOVE //
     }
 
@@ -164,12 +161,13 @@ public class Player : MonoBehaviour
             m_oInventory.AddItem(new ItemStack(i, 1));
         }
 
-        // open player hotbar
+        // open player hotbar and make sure the inventory is not open
         InventoryManager.m_gInstance.OpenContainer(new PlayerHotbarContainer(null, m_oInventory, 3));
-
-        // set the inventory open bool to false
-        m_bIsInventoryOpen = false;
+        InventoryManager.m_gInstance.ResetInventoryStatus();
     }
+
+
+
 
 
 
@@ -335,43 +333,27 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             // if the inventory bool is false
-            if (!m_bIsInventoryOpen)
+            if (!InventoryManager.m_gInstance.IsInventoryOpen())
             {
                 // Open the player inventory
                 InventoryManager.m_gInstance.OpenContainer(new PlayerContainer(null, m_oInventory, 6));
 
-                // set the inventory open bool to true
-                m_bIsInventoryOpen = true;
-
                 //
                 HideSelectedHotbar();
             }
-
-            // else if no key down
-            else
-            {
-                // close the player inventory and open hotbar
-                InventoryManager.m_gInstance.OpenContainer(new PlayerHotbarContainer(null, m_oInventory, 3));
-
-                // set the inventory open bool to false
-                m_bIsInventoryOpen = false;
-
-                //
-                m_nSelectedHotbarIndex = m_nPreviousSelectedHotbarIndex;
-            }
         }
 
-        // if the esc key is down
+        //
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            // if the inventory bool is false
-            if (m_bIsInventoryOpen)
+            //
+            if (!InventoryManager.m_gInstance.IsInventoryOpen())
             {
                 // close the player inventory and open hotbar
                 InventoryManager.m_gInstance.OpenContainer(new PlayerHotbarContainer(null, m_oInventory, 3));
 
-                // set the inventory open bool to false
-                m_bIsInventoryOpen = false;
+                //
+                InventoryManager.m_gInstance.ResetInventoryStatus();
 
                 //
                 m_nSelectedHotbarIndex = m_nPreviousSelectedHotbarIndex;
@@ -385,7 +367,7 @@ public class Player : MonoBehaviour
         for (int i = 0; i < m_akHotbarControls.Length; i++)
         {
             //
-            if (Input.GetKeyDown(m_akHotbarControls[i]) && !m_bIsInventoryOpen)
+            if (Input.GetKeyDown(m_akHotbarControls[i]) && !InventoryManager.m_gInstance.IsInventoryOpen())
             {
                 //
                 m_nSelectedHotbarIndex = i;
@@ -399,7 +381,7 @@ public class Player : MonoBehaviour
     private void MoveSelectedHotbarIndex(float nDirection)
     {
         //
-        if (!m_bIsInventoryOpen)
+        if (!InventoryManager.m_gInstance.IsInventoryOpen())
         {
             //
             if (nDirection > 0)
@@ -471,6 +453,9 @@ public class Player : MonoBehaviour
         {
             // Run interaction delegate.
             InteractionCallback();
+
+            //
+            HideSelectedHotbar();
         }
     }
 }

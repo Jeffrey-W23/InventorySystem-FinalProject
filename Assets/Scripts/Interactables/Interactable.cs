@@ -102,7 +102,7 @@ public class Interactable : MonoBehaviour
     // Param:
     //      cObject: The other Collider invloved in the collision.
     //--------------------------------------------------------------------------------------
-    private void OnTriggerEnter2D(Collider2D cObject)
+    private void OnTriggerStay2D(Collider2D cObject)
     {
         // if collides is player and not interacted or interactable
         if (cObject.tag == "Player" && !m_bInteracted && !m_bInteractable)

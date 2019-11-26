@@ -17,19 +17,19 @@ using UnityEngine;
 public class Container
 {
     //
-    private GameObject m_gPrefab;
+    protected int m_nSlots;
 
     //
-    private Inventory m_oInventory;
+    protected GameObject m_gPrefab;
 
     //
-    private Inventory m_oPlayerInventory;
+    protected Inventory m_oInventory;
 
     //
-    public int m_nSlots;
+    protected Inventory m_oPlayerInventory;
 
     //
-    private List<ItemSlot> m_agSlots = new List<ItemSlot>();
+    protected List<ItemSlot> m_agSlots = new List<ItemSlot>();
 
     //--------------------------------------------------------------------------------------
     // f
@@ -48,14 +48,14 @@ public class Container
     //--------------------------------------------------------------------------------------
     // f
     //--------------------------------------------------------------------------------------
-    public void AddSlot(Inventory oInventory, int nId)
+    public void AddSlot(Inventory oInventory, int nId, Transform m_tParent)
     {
         // get the slot component
         GameObject gInstance = Object.Instantiate(InventoryManager.m_gInstance.m_gSlotPrefab);
         ItemSlot gSlot = gInstance.GetComponent<ItemSlot>();
 
         // set the postion of the slot to the parent
-        gInstance.transform.SetParent(m_gPrefab.transform);
+        gInstance.transform.SetParent(m_tParent);
 
         // add the slot to the slots array
         m_agSlots.Add(gSlot);

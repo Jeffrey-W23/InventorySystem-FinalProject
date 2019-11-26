@@ -25,7 +25,7 @@ public class PlayerHotbarContainer : Container
         for (int i = 0; i < m_nSlots; i++)
         {
             // build the inventory slots
-            AddSlot(oPlayerInventory, i);
+            AddSlot(oPlayerInventory, i, m_gPrefab.transform);
         }
     }
 

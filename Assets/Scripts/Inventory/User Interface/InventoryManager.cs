@@ -40,6 +40,12 @@ public class InventoryManager : MonoBehaviour
     //
     private Tooltip m_gToolTip;
 
+    //
+    private bool m_bIsInventoryOpen = false;
+
+    //
+    private Player m_gPlayer;
+
     //--------------------------------------------------------------------------------------
     // f
     //--------------------------------------------------------------------------------------
@@ -53,6 +59,29 @@ public class InventoryManager : MonoBehaviour
 
         // get the tooltip component
         m_gToolTip = GetComponentInChildren<Tooltip>();
+
+        // get the player object
+        m_gPlayer = FindObjectOfType<Player>();
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    private void Update()
+    {
+        // if the inventory is currently opened
+        if (m_bIsInventoryOpen)
+        {
+            // if the escape key is pressed
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                // set the inventory opened to false
+                m_bIsInventoryOpen = false;
+
+                //
+                m_gPlayer.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+            }
+        }
     }
 
     //--------------------------------------------------------------------------------------
@@ -89,6 +118,12 @@ public class InventoryManager : MonoBehaviour
 
         // Set the current open container to passed in container
         m_oCurrentOpenContainer = nContainer;
+
+        // set the inventory opened to true
+        m_bIsInventoryOpen = true;
+
+        //
+        m_gPlayer.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
     }
 
     //--------------------------------------------------------------------------------------
@@ -102,6 +137,33 @@ public class InventoryManager : MonoBehaviour
             // close the current open container
             m_oCurrentOpenContainer.Close();
         }
+
+        // set the inventory opened to false
+        m_bIsInventoryOpen = false;
+
+        //
+        m_gPlayer.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    public bool IsInventoryOpen()
+    {
+        // return if the inventory is open
+        return m_bIsInventoryOpen;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    public void ResetInventoryStatus()
+    {
+        // reset the inventory open status back to false
+        m_bIsInventoryOpen = false;
+
+        //
+        m_gPlayer.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
     }
 
     //--------------------------------------------------------------------------------------

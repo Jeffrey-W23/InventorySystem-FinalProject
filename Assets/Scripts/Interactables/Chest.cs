@@ -16,6 +16,19 @@ using UnityEngine;
 //--------------------------------------------------------------------------------------
 public class Chest : Interactable
 {
+
+
+
+    //
+    private InventoryManager m_gInventoryManger;
+
+    //
+    public Inventory m_oInventory = new Inventory(6);
+
+
+
+
+
     //--------------------------------------------------------------------------------------
     // initialization.
     //--------------------------------------------------------------------------------------
@@ -25,18 +38,61 @@ public class Chest : Interactable
         base.Awake();
     }
 
+
+
+
+
+
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    private void Start()
+    {
+        //
+        m_gInventoryManger = InventoryManager.m_gInstance;
+    }
+
+
+
+
+
+
     //--------------------------------------------------------------------------------------
     // Update: Function that calls each frame to update game objects.
     //--------------------------------------------------------------------------------------
     void Update()
     {
         // If the interaction button or exc is pressed.
-        if (Input.GetKeyUp(KeyCode.Escape) || Input.GetKeyUp(KeyCode.E))
+        if (Input.GetKeyUp(KeyCode.Escape))
         {
-            // turn off interaction and set shop to closed
+            // turn off interaction and set chest to closed
             m_bInteracted = false;
+            m_bInteractable = false;
         }
     }
+
+
+
+
+
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    private void OpenCloseInventory()
+    {
+        // Open the chest inventory
+        if (!InventoryManager.m_gInstance.IsInventoryOpen())
+            InventoryManager.m_gInstance.OpenContainer(new ChestContainer(m_oInventory, m_sPlayerObject.m_oInventory, 6));
+    }
+
+
+
+
+
+
+
 
     //--------------------------------------------------------------------------------------
     // InteractedWith: override function from base class for what Interactable objects do 
@@ -46,5 +102,8 @@ public class Chest : Interactable
     {
         // Run the base interactedWith function.
         base.InteractedWith();
+
+        // open the chest
+        OpenCloseInventory();
     }
 }
