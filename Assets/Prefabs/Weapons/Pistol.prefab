@@ -179,4 +179,7 @@ MonoBehaviour:
   m_gBulletBlueprint: {fileID: 1021499879218684, guid: e4d81123b1006cf458bc2f15a5043c7a,
     type: 3}
   m_nPoolSize: 20
+  m_tCursor: {fileID: 2800000, guid: 7fb6753018a2dcd4fa1c7c4ccd191fdf, type: 3}
   m_gBulletSpawn: {fileID: 63188114}
+  m_oAmmo: {fileID: 11400000, guid: 709c12a8e31b09e4f9a53f90e2d27d25, type: 2}
+  m_nAmmoUsage: 1

@@ -84,7 +84,7 @@ public class Chest : Interactable
     {
         // Open the chest inventory
         if (!InventoryManager.m_gInstance.IsInventoryOpen())
-            InventoryManager.m_gInstance.OpenContainer(new ChestContainer(m_oInventory, m_sPlayerObject.m_oInventory, 6));
+            InventoryManager.m_gInstance.OpenContainer(new ChestContainer(m_oInventory, m_sPlayerObject.GetInventory(), 6));
     }
 
 

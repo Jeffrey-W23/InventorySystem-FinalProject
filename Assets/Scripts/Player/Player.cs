@@ -99,18 +99,16 @@ public class Player : MonoBehaviour
     public Item[] itemsToAdd;
 
     //
-    public Inventory m_oInventory = new Inventory(9);
+    private Inventory m_oInventory = new Inventory(9);
 
     //
-    private int m_nSelectedHotbarIndex = 0;
+    private InventoryManager m_gInventoryManger;
 
     //
-    private int m_nPreviousSelectedHotbarIndex;
+    private bool m_bFreezePlayer = false;
 
     //
-    private KeyCode[] m_akHotbarControls = new KeyCode[] { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3 };
-
-
+    private HotbarSelector m_gHotbarSelector;
 
 
 
@@ -124,6 +122,9 @@ public class Player : MonoBehaviour
     //--------------------------------------------------------------------------------------
     void Awake()
     {
+        //
+        m_gHotbarSelector = FindObjectOfType<HotbarSelector>();
+
         // Get the Rigidbody.
         m_rbRigidBody = GetComponent<Rigidbody2D>();
 
@@ -133,11 +134,12 @@ public class Player : MonoBehaviour
         // set the current speed of the player to walk
         m_fCurrentSpeed = m_fWalkSpeed;
 
-        // REMOVE // TEMP // REMOVE //
+        // REMOVE // TEMP // REMOVE // POSSIBLTY //
         // Set the parenting of pistol prefab.
-        //m_gPistol = Instantiate(m_gWeaponPrefab);
-        //m_gPistol.transform.parent = m_gArm.transform;
-        // REMOVE // TEMP // REMOVE //
+        m_gPistol = Instantiate(m_gWeaponPrefab);
+        m_gPistol.transform.parent = m_gArm.transform;
+        m_gPistol.SetActive(false);
+        // REMOVE // TEMP // REMOVE // POSSIBLTY //
     }
 
 
@@ -161,9 +163,12 @@ public class Player : MonoBehaviour
             m_oInventory.AddItem(new ItemStack(i, 1));
         }
 
+        // get the inventory manager instance
+        m_gInventoryManger = InventoryManager.m_gInstance;
+
         // open player hotbar and make sure the inventory is not open
-        InventoryManager.m_gInstance.OpenContainer(new PlayerHotbarContainer(null, m_oInventory, 3));
-        InventoryManager.m_gInstance.ResetInventoryStatus();
+        m_gInventoryManger.OpenContainer(new PlayerHotbarContainer(null, m_oInventory, 3));
+        m_gInventoryManger.ResetInventoryStatus();
     }
 
 
@@ -178,11 +183,15 @@ public class Player : MonoBehaviour
     //--------------------------------------------------------------------------------------
     void FixedUpdate()
     {
-        // rotate player based on mouse postion.
-        Rotate();
+        // is player allowed to move
+        if (!m_bFreezePlayer)
+        {
+            // rotate player based on mouse postion.
+            Rotate();
 
-        // run the movement function to move player.
-        Movement();      
+            // run the movement function to move player.
+            Movement();
+        } 
     }
 
     //--------------------------------------------------------------------------------------
@@ -190,8 +199,9 @@ public class Player : MonoBehaviour
     //--------------------------------------------------------------------------------------
     void LateUpdate()
     {
-        // move arm with mouse movement
-        MoveArm();
+        // move arm with mouse movement if the player is allowed to move
+        if (!m_bFreezePlayer)
+            MoveArm();
     }
 
 
@@ -210,6 +220,45 @@ public class Player : MonoBehaviour
 
         //
         OpenCloseInventory();
+
+
+
+
+        //
+        if (m_gHotbarSelector.GetCurrentlySelectedItemStack().GetItem() != null)
+        {
+            //
+            if (m_gHotbarSelector.GetCurrentlySelectedItemStack().GetItem().m_strTitle == "Pistol")
+            {
+
+                //
+                m_gPistol.SetActive(true);
+
+                //
+                //CustomCursor.m_gInstance.SetCustomCursor(m_gPistol.GetComponent<Pistol>().m_tCursor);
+            }
+
+            else
+            {
+                //
+                m_gPistol.SetActive(false);
+
+                //
+                //CustomCursor.m_gInstance.SetDefaultCursor();
+            }
+        }
+
+        //
+        else
+        {
+            //
+            m_gPistol.SetActive(false);
+
+            //
+            CustomCursor.m_gInstance.SetDefaultCursor();
+        }
+
+        
     }
 
 
@@ -333,44 +382,10 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.I))
         {
             // if the inventory bool is false
-            if (!InventoryManager.m_gInstance.IsInventoryOpen())
+            if (!m_gInventoryManger.IsInventoryOpen())
             {
                 // Open the player inventory
-                InventoryManager.m_gInstance.OpenContainer(new PlayerContainer(null, m_oInventory, 6));
-
-                //
-                HideSelectedHotbar();
-            }
-        }
-
-        //
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            //
-            if (!InventoryManager.m_gInstance.IsInventoryOpen())
-            {
-                // close the player inventory and open hotbar
-                InventoryManager.m_gInstance.OpenContainer(new PlayerHotbarContainer(null, m_oInventory, 3));
-
-                //
-                InventoryManager.m_gInstance.ResetInventoryStatus();
-
-                //
-                m_nSelectedHotbarIndex = m_nPreviousSelectedHotbarIndex;
-            }
-        }
-
-        //
-        MoveSelectedHotbarIndex(Input.GetAxis("Mouse ScrollWheel"));
-
-        //
-        for (int i = 0; i < m_akHotbarControls.Length; i++)
-        {
-            //
-            if (Input.GetKeyDown(m_akHotbarControls[i]) && !InventoryManager.m_gInstance.IsInventoryOpen())
-            {
-                //
-                m_nSelectedHotbarIndex = i;
+                m_gInventoryManger.OpenContainer(new PlayerContainer(null, m_oInventory, 6));
             }
         }
     }
@@ -378,64 +393,36 @@ public class Player : MonoBehaviour
     //--------------------------------------------------------------------------------------
     // f
     //--------------------------------------------------------------------------------------
-    private void MoveSelectedHotbarIndex(float nDirection)
+    public bool GetFreezePlayer()
     {
-        //
-        if (!InventoryManager.m_gInstance.IsInventoryOpen())
-        {
-            //
-            if (nDirection > 0)
-            {
-                //
-                nDirection = 1;
-            }
-
-            //
-            if (nDirection < 0)
-            {
-                //
-                nDirection = -1;
-            }
-
-            //
-            for (m_nSelectedHotbarIndex -= (int)nDirection; m_nSelectedHotbarIndex < 0; m_nSelectedHotbarIndex += 3) ;
-
-            //
-            while (m_nSelectedHotbarIndex >= 3)
-            {
-                //
-                m_nSelectedHotbarIndex -= 3;
-            }
-        }
+        // get the player freeze bool
+        return m_bFreezePlayer;
     }
 
     //--------------------------------------------------------------------------------------
     // f
     //--------------------------------------------------------------------------------------
-    public void HideSelectedHotbar()
+    public void SetFreezePlayer(bool bFreeze)
     {
-        //
-        m_nPreviousSelectedHotbarIndex = m_nSelectedHotbarIndex;
+        // set the player freeze bool
+        m_bFreezePlayer = bFreeze;
 
-        //
-        m_nSelectedHotbarIndex = 4;
+        // make sure the player is forzen further by constricting ridgidbody
+        if (bFreeze)
+            m_rbRigidBody.constraints = RigidbodyConstraints2D.FreezeAll;
+        else if (!bFreeze)
+            m_rbRigidBody.constraints = RigidbodyConstraints2D.None;
+
     }
 
     //--------------------------------------------------------------------------------------
     // f
     //--------------------------------------------------------------------------------------
-    public int GetSelectedHotbarIndex()
+    public Inventory GetInventory()
     {
-        //
-        return m_nSelectedHotbarIndex;
+        // return the player inventory
+        return m_oInventory;
     }
-
-
-
-
-
-
-
 
 
 
@@ -453,9 +440,6 @@ public class Player : MonoBehaviour
         {
             // Run interaction delegate.
             InteractionCallback();
-
-            //
-            HideSelectedHotbar();
         }
     }
 }

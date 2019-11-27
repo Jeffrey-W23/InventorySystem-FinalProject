@@ -44,6 +44,9 @@ public class InventoryManager : MonoBehaviour
     private bool m_bIsInventoryOpen = false;
 
     //
+    public bool m_bHasHotbar = false;
+
+    //
     private Player m_gPlayer;
 
     //--------------------------------------------------------------------------------------
@@ -75,11 +78,21 @@ public class InventoryManager : MonoBehaviour
             // if the escape key is pressed
             if (Input.GetKeyDown(KeyCode.Escape))
             {
+                // if the player has a hotbar
+                if (m_bHasHotbar)
+                {
+                    // Open the player hotbar container
+                    OpenContainer(new PlayerHotbarContainer(null, m_gPlayer.GetInventory(), 3));
+                }
+
                 // set the inventory opened to false
                 m_bIsInventoryOpen = false;
 
-                //
-                m_gPlayer.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+                // allow the player to move again because an inventory is no longer open
+                m_gPlayer.SetFreezePlayer(false);
+
+                // turn off the tool tip
+                ActivateToolTip(string.Empty);
             }
         }
     }
@@ -122,8 +135,11 @@ public class InventoryManager : MonoBehaviour
         // set the inventory opened to true
         m_bIsInventoryOpen = true;
 
-        //
-        m_gPlayer.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezePosition;
+        // stop the player from moving when the inventory is open
+        m_gPlayer.SetFreezePlayer(true);
+
+        // set the cursor back to default
+        CustomCursor.m_gInstance.SetDefaultCursor();
     }
 
     //--------------------------------------------------------------------------------------
@@ -142,7 +158,16 @@ public class InventoryManager : MonoBehaviour
         m_bIsInventoryOpen = false;
 
         //
-        m_gPlayer.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+        m_gPlayer.SetFreezePlayer(false);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    public Container GetCurrentlyOpenContainer()
+    {
+        // return the current open container
+        return m_oCurrentOpenContainer;
     }
 
     //--------------------------------------------------------------------------------------
@@ -163,7 +188,7 @@ public class InventoryManager : MonoBehaviour
         m_bIsInventoryOpen = false;
 
         //
-        m_gPlayer.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+        m_gPlayer.SetFreezePlayer(false);
     }
 
     //--------------------------------------------------------------------------------------
@@ -191,6 +216,14 @@ public class InventoryManager : MonoBehaviour
     {
         // set the tooltip
         m_gToolTip.SetTooltip(strTitle);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    public Inventory GetPlayerInventory()
+    {
+        return m_gPlayer.GetInventory();
     }
 }
 

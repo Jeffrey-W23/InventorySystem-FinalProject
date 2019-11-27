@@ -21,15 +21,37 @@ public class CustomCursor : MonoBehaviour
     [LabelOverride("Cursor")] [Tooltip("The cursor object to replace the default unity cursor.")]
     public Texture2D m_tCursor;
 
+    //
+    public static CustomCursor m_gInstance;
+
     //--------------------------------------------------------------------------------------
     // initialization
     //--------------------------------------------------------------------------------------
     void Awake()
     {
+        // set instance
+        m_gInstance = this;
+
+        SetCustomCursor(m_tCursor);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    public void SetCustomCursor(Texture2D tCursor)
+    {
         // Set the mouse click point.
-        Vector2 v2CursorHotspot = new Vector2(m_tCursor.width / 2, m_tCursor.height / 2);
+        Vector2 v2CursorHotspot = new Vector2(tCursor.width / 2, tCursor.height / 2);
 
         // Set the cursor values.
-        Cursor.SetCursor(m_tCursor, v2CursorHotspot, CursorMode.Auto);
+        Cursor.SetCursor(tCursor, v2CursorHotspot, CursorMode.Auto);
+    }
+
+    //--------------------------------------------------------------------------------------
+    // f
+    //--------------------------------------------------------------------------------------
+    public void SetDefaultCursor()
+    {
+        SetCustomCursor(m_tCursor);
     }
 }
