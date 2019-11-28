@@ -87,6 +87,10 @@ public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
             // enabled the slot icon
             m_iIcon.enabled = true;
             m_iIcon.sprite = m_oCurrentStack.GetItem().m_sIcon;
+            
+            // make sure the slot icon is the same height and wisth of the item icon
+            m_iIcon.GetComponent<RectTransform>().sizeDelta = new Vector2
+                (m_oCurrentStack.GetItem().m_sIcon.rect.width, m_oCurrentStack.GetItem().m_sIcon.rect.height);
 
             // if the current stack item count is greater than 1
             if (m_oCurrentStack.GetItemCount() > 1)

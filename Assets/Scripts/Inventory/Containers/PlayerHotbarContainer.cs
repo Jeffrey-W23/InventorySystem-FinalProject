@@ -25,7 +25,7 @@ public class PlayerHotbarContainer : Container
         for (int i = 0; i < m_nSlots; i++)
         {
             // build the inventory slots
-            AddSlot(oPlayerInventory, i, m_gPrefab.transform);
+            AddSlot(oPlayerInventory, i, m_gPrefab.GetComponentInChildren<Transform>().Find("Player Hotbar").transform);
         }
     }
 

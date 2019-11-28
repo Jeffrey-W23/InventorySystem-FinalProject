@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Pistol Ammo
   m_EditorClassIdentifier: 
   m_strTitle: Pistol Ammo
-  m_sIcon: {fileID: 21300000, guid: 1555dfb8bbe0dab41bba347fe94329e1, type: 3}
+  m_sIcon: {fileID: 21300000, guid: 853b96655d2558245b34de5df1251bca, type: 3}
   m_nMaxStackSize: 20

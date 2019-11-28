@@ -107,9 +107,6 @@ public class Player : MonoBehaviour
     //
     private bool m_bFreezePlayer = false;
 
-    //
-    private HotbarSelector m_gHotbarSelector;
-
 
 
 
@@ -122,9 +119,6 @@ public class Player : MonoBehaviour
     //--------------------------------------------------------------------------------------
     void Awake()
     {
-        //
-        m_gHotbarSelector = FindObjectOfType<HotbarSelector>();
-
         // Get the Rigidbody.
         m_rbRigidBody = GetComponent<Rigidbody2D>();
 
@@ -225,10 +219,10 @@ public class Player : MonoBehaviour
 
 
         //
-        if (m_gHotbarSelector.GetCurrentlySelectedItemStack().GetItem() != null)
+        if (FindObjectOfType<HotbarSelector>() != null && FindObjectOfType<HotbarSelector>().GetCurrentlySelectedItemStack().GetItem() != null)
         {
             //
-            if (m_gHotbarSelector.GetCurrentlySelectedItemStack().GetItem().m_strTitle == "Pistol")
+            if (FindObjectOfType<HotbarSelector>().GetCurrentlySelectedItemStack().GetItem().m_strTitle == "Pistol")
             {
 
                 //

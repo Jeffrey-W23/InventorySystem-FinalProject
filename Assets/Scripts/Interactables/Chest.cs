@@ -25,6 +25,12 @@ public class Chest : Interactable
     //
     public Inventory m_oInventory = new Inventory(6);
 
+    //
+    public Sprite m_sOpenImage;
+
+    //
+    public Sprite m_sClosedImage;
+
 
 
 
@@ -69,6 +75,9 @@ public class Chest : Interactable
             // turn off interaction and set chest to closed
             m_bInteracted = false;
             m_bInteractable = false;
+
+            // set the closed chest image
+            gameObject.GetComponent<SpriteRenderer>().sprite = m_sClosedImage;
         }
     }
 
@@ -85,6 +94,9 @@ public class Chest : Interactable
         // Open the chest inventory
         if (!InventoryManager.m_gInstance.IsInventoryOpen())
             InventoryManager.m_gInstance.OpenContainer(new ChestContainer(m_oInventory, m_sPlayerObject.GetInventory(), 6));
+
+        // set the open chest image
+        gameObject.GetComponent<SpriteRenderer>().sprite = m_sOpenImage;
     }
 
 

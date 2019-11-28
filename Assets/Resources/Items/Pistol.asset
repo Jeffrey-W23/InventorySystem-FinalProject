@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   m_strTitle: Pistol
-  m_sIcon: {fileID: 21300000, guid: fd06df7bcf534ca4c80d4dc00414201d, type: 3}
+  m_sIcon: {fileID: 21300000, guid: f496a137cda926244ad8c128ee735ad1, type: 3}
   m_nMaxStackSize: 1

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4662297467071918}
   - component: {fileID: 114329355579121534}
   m_Layer: 0
-  m_Name: GameManager
+  m_Name: Game Manager
   m_TagString: Untagged
   m_Icon: {fileID: -964228994112308473, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
@@ -43,4 +43,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 666b15e3e3a261944b3e384e0133c9b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_tCursor: {fileID: 2800000, guid: 7fb6753018a2dcd4fa1c7c4ccd191fdf, type: 3}
+  m_tCursor: {fileID: 2800000, guid: 42c8c836cff24344c8e62afa186bc50f, type: 3}
