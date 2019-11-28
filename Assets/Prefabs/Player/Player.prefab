@@ -100,6 +100,8 @@ MonoBehaviour:
   m_fWalkSpeed: 1
   m_fRunSpeed: 1.5
   m_fRunExhaust: 3
+  m_nInventorySize: 6
+  m_nHotbarSize: 3
   m_bDebugMode: 1
   m_gWeaponPrefab: {fileID: 1464900318012710, guid: 9ec021c7263fec74e9ab93327c45d5c5,
     type: 3}

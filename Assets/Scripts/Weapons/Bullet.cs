@@ -1,7 +1,8 @@
 ﻿//--------------------------------------------------------------------------------------
-// Purpose: 
+// Purpose: The main logic of the Bullet object. 
 //
-// Description: 
+// Description: This script is the base object for bullets in the project. This script
+// will mainly handle moving bullets and what to do on collision.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------

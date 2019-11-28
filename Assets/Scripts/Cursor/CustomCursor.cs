@@ -21,22 +21,27 @@ public class CustomCursor : MonoBehaviour
     [LabelOverride("Cursor")] [Tooltip("The cursor object to replace the default unity cursor.")]
     public Texture2D m_tCursor;
 
-    //
+    // new singleton for setting the cursor throughout project
+    [HideInInspector]
     public static CustomCursor m_gInstance;
 
     //--------------------------------------------------------------------------------------
     // initialization
     //--------------------------------------------------------------------------------------
-    void Awake()
+    private void Awake()
     {
         // set instance
         m_gInstance = this;
 
+        // Set the cursor to the default
         SetCustomCursor(m_tCursor);
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // SetCustomCursor: Set the current cursor of the scene
+    // 
+    // Param:
+    //      tCursor: Texture2D to set the cursor.
     //--------------------------------------------------------------------------------------
     public void SetCustomCursor(Texture2D tCursor)
     {
@@ -48,10 +53,11 @@ public class CustomCursor : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // SetDefaultCursor: Sets the current cursor of the scene to the public default.
     //--------------------------------------------------------------------------------------
     public void SetDefaultCursor()
     {
+        // Set the cursor to the desfault
         SetCustomCursor(m_tCursor);
     }
 }

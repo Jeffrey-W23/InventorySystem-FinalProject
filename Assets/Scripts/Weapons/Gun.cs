@@ -1,7 +1,8 @@
 ﻿//--------------------------------------------------------------------------------------
-// Purpose: 
+// Purpose: The main logic for the gun object.
 //
-// Description: 
+// Description: This script is the base object for gun in the project. This script
+// will handle spawning of bullets, controling ammo, etc.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------
@@ -25,6 +26,10 @@ public class Gun : MonoBehaviour
     [LabelOverride("Bullet Object")] [Tooltip("The bullet that this gun will fire.")]
     public GameObject m_gBulletBlueprint;
 
+    // Public gameobject for where to spawn the bullet
+    [LabelOverride("Bullet Spawn Location")] [Tooltip("A Gameobject for where to exactly spawn the bullet.")]
+    public GameObject m_gBulletSpawn;
+
     // public int for pool size.
     [LabelOverride("Pool Size")] [Tooltip("How many bullets allowed on screen at one time.")]
     public int m_nPoolSize;
@@ -33,46 +38,36 @@ public class Gun : MonoBehaviour
     [Space]
     //--------------------------------------------------------------------------------------
 
+    // AMMO //
+    //--------------------------------------------------------------------------------------
+    // Title for this section of public values.
+    [Header("Ammo:")]
 
-
-
-
-
-
-    // Public texture for the cursor visuals.
-    [LabelOverride("Cursor")] [Tooltip("The cursor object to replace the default unity cursor.")]
-    public Texture2D m_tCursor;
-
-    //
-    public GameObject m_gBulletSpawn;
-
-    //
+    // public item for the inventory ammo item of this gun
+    [LabelOverride("Ammo Item")] [Tooltip("The Ammo item required to shoot this gun, as well as the inventory object.")]
     public Item m_oAmmo;
 
-    //
-    private int m_nCurrentAmmo = 0;
-
-    //
+    // public int for the ammo usage of the gun
+    [LabelOverride("Ammo Usage")] [Tooltip("The amount of ammo used every shoot taken.")]
     public int m_nAmmoUsage = 1;
 
-    //
-    private int m_nCurrentAmmoStack = -1;
-
-    //
-    private InventoryManager m_gInventoryManger;
-
-
-
-
-
-
-
-
+    // Leave a space in the inspector.
+    [Space]
+    //--------------------------------------------------------------------------------------
 
     // PRIVATE VALUES //
     //--------------------------------------------------------------------------------------
     // An Array of GameObjects for bullets.
     protected GameObject[] m_gBulletList;
+
+    // An int for the current ammo of the gun
+    protected int m_nCurrentAmmo = 0;
+
+    // An int of the current stack of ammo in use
+    protected int m_nCurrentAmmoStack = -1;
+
+    // An instance of the inventory manager of the project
+    protected InventoryManager m_gInventoryManger;
     //--------------------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------------------
@@ -163,7 +158,8 @@ public class Gun : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // CheckCurrentAmmo: Check the ammo in the inventory system and make sure the gun is
+    // up to date with this information.
     //--------------------------------------------------------------------------------------
     private void CheckCurrentAmmo()
     {
@@ -210,7 +206,10 @@ public class Gun : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // UpdateCurrentAmmo: Update the ammo in the inventory system.
+    // 
+    // Param:
+    //      nAmount: An int for the amount of ammo to use per shot.
     //--------------------------------------------------------------------------------------
     private void UpdateCurrentAmmo(int nAmount)
     {

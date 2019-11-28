@@ -1,7 +1,8 @@
 ﻿//--------------------------------------------------------------------------------------
-// Purpose: 
+// Purpose: The main logic for the Player object.
 //
-// Description: 
+// Description: This script will handled most of the typically work that a player has to
+// do like movement, interaction, opening menus, etc.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------
@@ -32,6 +33,23 @@ public class Player : MonoBehaviour
     // public float value for max exhaust level.
     [LabelOverride("Running Exhaust")] [Tooltip("The max level of exhaustion the player can handle before running is false.")]
     public float m_fRunExhaust = 3.0f;
+
+    // Leave a space in the inspector.
+    [Space]
+    //--------------------------------------------------------------------------------------
+
+    // INVENTORY //
+    //--------------------------------------------------------------------------------------
+    // Title for this section of public values.
+    [Header("Inventory Settings:")]
+
+    // public int for the inventory size
+    [LabelOverride("Inventory Size")] [Tooltip("The size of the Inventory for the player object.")]
+    public int m_nInventorySize = 9;
+
+    // public int for the hotbar inventory size
+    [LabelOverride("Hotbar Size")] [Tooltip("The size of the Hotbar for the player object.")]
+    public int m_nHotbarSize = 3;
 
     // Leave a space in the inspector.
     [Space]
@@ -69,6 +87,15 @@ public class Player : MonoBehaviour
 
     // private float value for distance between mouse and arm
     private float m_fArmDistanceFromMouse;
+
+    // private inventory for the player object
+    private Inventory m_oInventory;
+
+    // private inventory manager for the inventory manager instance
+    private InventoryManager m_gInventoryManger;
+
+    // private bool for freezing the player
+    private bool m_bFreezePlayer = false;
     //--------------------------------------------------------------------------------------
 
     // DELEGATES //
@@ -80,45 +107,25 @@ public class Player : MonoBehaviour
     public InteractionEventHandler InteractionCallback;
     //--------------------------------------------------------------------------------------
 
-    // REMOVE // TEMP // REMOVE //
+    // REMOVE // TEMP // REMOVE // POSSIBLTY //
     // Weapon prefab.
     public GameObject m_gWeaponPrefab;
 
     // The Pistol weapon.
     private GameObject m_gPistol;
-    // REMOVE // TEMP // REMOVE //
 
-
-
-
-
-
-
-
-
+    // an array to add some items to the inventory
     public Item[] itemsToAdd;
-
-    //
-    private Inventory m_oInventory = new Inventory(9);
-
-    //
-    private InventoryManager m_gInventoryManger;
-
-    //
-    private bool m_bFreezePlayer = false;
-
-
-
-
-
-
-
+    // REMOVE // TEMP // REMOVE // POSSIBLTY //
 
     //--------------------------------------------------------------------------------------
-    // initialization
+    // Initialization
     //--------------------------------------------------------------------------------------
-    void Awake()
+    private void Awake()
     {
+        // set the inventory of the player
+        m_oInventory = new Inventory(m_nInventorySize);
+
         // Get the Rigidbody.
         m_rbRigidBody = GetComponent<Rigidbody2D>();
 
@@ -136,46 +143,61 @@ public class Player : MonoBehaviour
         // REMOVE // TEMP // REMOVE // POSSIBLTY //
     }
 
-
-
-
-
-
-
-
-
-
     //--------------------------------------------------------------------------------------
-    // f
+    // Initialization
     //--------------------------------------------------------------------------------------
     private void Start()
     {
+        // REMOVE // TEMP // REMOVE // POSSIBLTY //
         // for each item in items to add
         foreach (Item i in itemsToAdd)
         {
             // add an item to the inventory
             m_oInventory.AddItem(new ItemStack(i, 1));
         }
+        // REMOVE // TEMP // REMOVE // POSSIBLTY //
 
         // get the inventory manager instance
         m_gInventoryManger = InventoryManager.m_gInstance;
 
         // open player hotbar and make sure the inventory is not open
-        m_gInventoryManger.OpenContainer(new PlayerHotbarContainer(null, m_oInventory, 3));
+        m_gInventoryManger.OpenContainer(new PlayerHotbarContainer(null, m_oInventory, m_nHotbarSize));
         m_gInventoryManger.ResetInventoryStatus();
     }
 
+    //--------------------------------------------------------------------------------------
+    // Update: Function that calls each frame to update game objects.
+    //--------------------------------------------------------------------------------------
+    private void Update()
+    {
+        // Run the interaction function
+        Interaction();
 
+        // Open and close the inventory system
+        OpenCloseInventory();
 
+        // make sure the hotbar selector isnt null and the current selected item isnt null
+        if (FindObjectOfType<HotbarSelector>() != null && FindObjectOfType<HotbarSelector>().GetCurrentlySelectedItemStack().GetItem() != null)
+        {
+            // if the hotbar selector has the gun pistol currently selected turn the object on and off
+            if (FindObjectOfType<HotbarSelector>().GetCurrentlySelectedItemStack().GetItem().m_strTitle == "Pistol")
+                m_gPistol.SetActive(true);
+            else
+                m_gPistol.SetActive(false);
+        }
 
-
-
-
+        // else if the currently selected item is null or the hotbar selector is null 
+        else
+        {
+            // set the pistol to unactive
+            m_gPistol.SetActive(false);
+        }
+    }
 
     //--------------------------------------------------------------------------------------
     // FixedUpdate: Function that calls each frame to update game objects.
     //--------------------------------------------------------------------------------------
-    void FixedUpdate()
+    private void FixedUpdate()
     {
         // is player allowed to move
         if (!m_bFreezePlayer)
@@ -191,80 +213,17 @@ public class Player : MonoBehaviour
     //--------------------------------------------------------------------------------------
     // LateUpdate: Function that calls each frame to update game objects.
     //--------------------------------------------------------------------------------------
-    void LateUpdate()
+    private void LateUpdate()
     {
         // move arm with mouse movement if the player is allowed to move
         if (!m_bFreezePlayer)
             MoveArm();
     }
 
-
-
-
-
-
-
     //--------------------------------------------------------------------------------------
-    // f
+    // Movement: Move the player rigidbody, for both walking and sprinting.
     //--------------------------------------------------------------------------------------
-    private void Update()
-    {
-        // Run the interaction function
-        Interaction();
-
-        //
-        OpenCloseInventory();
-
-
-
-
-        //
-        if (FindObjectOfType<HotbarSelector>() != null && FindObjectOfType<HotbarSelector>().GetCurrentlySelectedItemStack().GetItem() != null)
-        {
-            //
-            if (FindObjectOfType<HotbarSelector>().GetCurrentlySelectedItemStack().GetItem().m_strTitle == "Pistol")
-            {
-
-                //
-                m_gPistol.SetActive(true);
-
-                //
-                //CustomCursor.m_gInstance.SetCustomCursor(m_gPistol.GetComponent<Pistol>().m_tCursor);
-            }
-
-            else
-            {
-                //
-                m_gPistol.SetActive(false);
-
-                //
-                //CustomCursor.m_gInstance.SetDefaultCursor();
-            }
-        }
-
-        //
-        else
-        {
-            //
-            m_gPistol.SetActive(false);
-
-            //
-            CustomCursor.m_gInstance.SetDefaultCursor();
-        }
-
-        
-    }
-
-
-
-
-
-
-
-    //--------------------------------------------------------------------------------------
-    // Movement:
-    //--------------------------------------------------------------------------------------
-    void Movement()
+    private void Movement()
     {
         // Get the Horizontal and Vertical axis.
         Vector3 v2MovementDirection = new Vector3(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"), 0.0f).normalized;
@@ -312,7 +271,7 @@ public class Player : MonoBehaviour
     //--------------------------------------------------------------------------------------
     // Roatate: Rotate the player from the mouse movement.
     //--------------------------------------------------------------------------------------
-    void Rotate()
+    private void Rotate()
     {
         // Get mouse inside camera 
         Vector3 v3Position = Camera.main.WorldToScreenPoint(transform.position);
@@ -328,9 +287,9 @@ public class Player : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // MoveArm:
+    // MoveArm: Move the player objects arm towards the camera.
     //--------------------------------------------------------------------------------------
-    void MoveArm()
+    private void MoveArm()
     {
         // Get mouse pos inside camera
         Vector3 v3Position = Camera.main.WorldToScreenPoint(m_gArm.transform.position);
@@ -354,21 +313,8 @@ public class Player : MonoBehaviour
         }
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     //--------------------------------------------------------------------------------------
-    // f
+    // OpenCloseInventory: Open/Close the Inventory container of the player object.
     //--------------------------------------------------------------------------------------
     private void OpenCloseInventory()
     {
@@ -379,13 +325,16 @@ public class Player : MonoBehaviour
             if (!m_gInventoryManger.IsInventoryOpen())
             {
                 // Open the player inventory
-                m_gInventoryManger.OpenContainer(new PlayerContainer(null, m_oInventory, 6));
+                m_gInventoryManger.OpenContainer(new PlayerContainer(null, m_oInventory, m_nInventorySize));
             }
         }
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetFreezePlayer: Get the current freeze status of the player. 
+    //
+    // Return:
+    //      bool: the current freeze staus of the player.
     //--------------------------------------------------------------------------------------
     public bool GetFreezePlayer()
     {
@@ -394,7 +343,23 @@ public class Player : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetInventory: Get the inventory of the player object.
+    //
+    // Return:
+    //      Inventory: the inventory of the player object.
+    //--------------------------------------------------------------------------------------
+    public Inventory GetInventory()
+    {
+        // return the player inventory
+        return m_oInventory;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // SetFreezePlayer: Set the freeze status of the player object. Used for ensuring the
+    // player stays still, good for open menus or possibly cut scenes, etc.
+    //
+    // Param:
+    //      bFreeze: bool for setting the freeze status.
     //--------------------------------------------------------------------------------------
     public void SetFreezePlayer(bool bFreeze)
     {
@@ -408,21 +373,6 @@ public class Player : MonoBehaviour
             m_rbRigidBody.constraints = RigidbodyConstraints2D.None;
 
     }
-
-    //--------------------------------------------------------------------------------------
-    // f
-    //--------------------------------------------------------------------------------------
-    public Inventory GetInventory()
-    {
-        // return the player inventory
-        return m_oInventory;
-    }
-
-
-
-
-
-
 
     //--------------------------------------------------------------------------------------
     // Interaction: Function interacts on button press with interactables objects.

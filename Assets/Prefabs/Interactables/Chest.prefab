@@ -101,6 +101,7 @@ MonoBehaviour:
     type: 3}
   m_bInteractAudio: 0
   m_acInteractAudio: {fileID: 0}
+  m_nInventorySize: 6
   m_sOpenImage: {fileID: 21300000, guid: f6867bebd2835ac43b62b3e4d54562b3, type: 3}
   m_sClosedImage: {fileID: 21300000, guid: 7d892e80db411df4e8a430a7781864a1, type: 3}
 --- !u!61 &2257229754701781217

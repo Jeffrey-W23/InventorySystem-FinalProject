@@ -33,7 +33,7 @@ public class Follow : MonoBehaviour
     //--------------------------------------------------------------------------------------
     // initialization
     //--------------------------------------------------------------------------------------
-    void Awake()
+    private void Awake()
     {
         // set the offset value.
         m_v3Offset = transform.position - m_gTarget.transform.position;
@@ -42,7 +42,7 @@ public class Follow : MonoBehaviour
     //--------------------------------------------------------------------------------------
     // Update: Function that calls each frame to update game objects.
     //--------------------------------------------------------------------------------------
-    void Update()
+    private void Update()
     {
         // Calc the new x and y position of the camera
         float fNewXPosition = m_gTarget.transform.position.x - m_v3Offset.x;
