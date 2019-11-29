@@ -1,7 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------
-// Purpose: 
-//
-// Description: 
+// Purpose: The main logic of an Item Slot in a inventory container. 
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------
@@ -14,30 +12,49 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 //--------------------------------------------------------------------------------------
-// f
+// ItemSlot object. Inheriting from MonoBehaviour.
 //--------------------------------------------------------------------------------------
-public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler
+public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler, IPointerExitHandler // Get handlers for mouse ui methods.
 {
-    //
+    // SLOT //
+    //--------------------------------------------------------------------------------------
+    // Title for this section of public values.
+    [Header("Slot Settings:")]
+
+    // public image for the slot icon
+    [LabelOverride("Icon Object")] [Tooltip("The child object used for displaying the item icon.")]
     public Image m_iIcon;
 
-    //
+    // public text for the item count
+    [LabelOverride("Count Object")] [Tooltip("The child object used for displaying the item count.")]
     public Text m_tCount;
 
-    //
+    // Leave a space in the inspector.
+    [Space]
+    //--------------------------------------------------------------------------------------
+
+    // PRIVATE VALUES //
+    //--------------------------------------------------------------------------------------
+    // private id for the item slot Id
     private int m_nId;
 
-    //
+    // private item stack for current stack
     private ItemStack m_oCurrentStack;
 
-    //
+    // private container for current open container
     private Container m_oCurrentContainer;
 
-    //
+    // private inventory manager instance
     private InventoryManager m_gInventoryManger;
+    //--------------------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------------------
-    // f
+    // SetSlot: Set up the item slot.
+    //
+    // Param:
+    //      oInventory: An Inventory, The inventory to set the slot.
+    //      nId: An int, The id for the slot.
+    //      oContainer: An Container, the container to set.
     //--------------------------------------------------------------------------------------
     public void SetSlot(Inventory oInventory, int nId, Container oContainer)
     {
@@ -56,7 +73,10 @@ public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // SetSlotContent: Set the stack of the item slot.
+    //
+    // Param:
+    //      oStack: the item stack to set to the item slot.
     //--------------------------------------------------------------------------------------
     private void SetSlotContent(ItemStack oStack)
     {
@@ -68,7 +88,10 @@ public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // SetTooltip: Set the tooltip of the item slot.
+    //
+    // Param:
+    //      strTitle: A string, title of the tooltip.
     //--------------------------------------------------------------------------------------
     private void SetTooltip(string strTitle)
     {
@@ -77,7 +100,7 @@ public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // UpdateSlot: Check / update the item slot.
     //--------------------------------------------------------------------------------------
     public void UpdateSlot()
     {
@@ -119,7 +142,10 @@ public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // OnPointerDown: Called by the EventSystem when a PointerDown event occurs.
+    //
+    // Param:
+    //      eventData: Current event data.
     //--------------------------------------------------------------------------------------
     public void OnPointerDown(PointerEventData eventData)
     {
@@ -145,7 +171,11 @@ public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // OnPointerEnter: Called by the EventSystem when the pointer enters the object 
+    // associated with this EventTrigger.
+    //
+    // Param:
+    //      eventData: Current event data.
     //--------------------------------------------------------------------------------------
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -161,7 +191,10 @@ public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // OnPointerExit: When the cursor exits the rect area of this selectable UI object.
+    //
+    // Param:
+    //      eventData: Current event data.
     //--------------------------------------------------------------------------------------
     public void OnPointerExit(PointerEventData eventData)
     {
@@ -170,7 +203,11 @@ public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // OnLeftClick: What the item slot will do on a left click.
+    //
+    // Param:
+    //      oCurrentSelectedStack: an ItemStack of the currently slected stack.
+    //      oCurrentStackCopy: and ItemStack of the copy of the item stack.
     //--------------------------------------------------------------------------------------
     private void OnLeftClick(ItemStack oCurrentSelectedStack, ItemStack oCurrentStackCopy)
     {
@@ -264,67 +301,71 @@ public class ItemSlot : MonoBehaviour, IPointerDownHandler, IPointerEnterHandler
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // OnRightClick: What the item slot will do on a right click.
+    //
+    // Param:
+    //      oCurrentSelectedStack: an ItemStack of the current stack.
+    //      oCurrentStackCopy: and ItemStack of the copy of the item stack.
     //--------------------------------------------------------------------------------------
     private void OnRightClick(ItemStack oCurrentSelectedStack, ItemStack oCurrentStackCopy)
     {
-        //
+        // if the current stack is not empty and the selected stack is empty
         if (!m_oCurrentStack.IsStackEmpty() && oCurrentSelectedStack.IsStackEmpty())
         {
-            //
+            // split the current stack in half
             ItemStack oSplitStack = oCurrentStackCopy.SplitStack(oCurrentStackCopy.GetItemCount() / 2);
 
-            //
+            // set the currently selected stack to the split stack.
             m_gInventoryManger.SetSelectedStack(oSplitStack);
 
-            //
+            // set the contentto the copy of the current stack.
             SetSlotContent(oCurrentStackCopy);
 
             // deactivate the tooltip
             SetTooltip(string.Empty);
         }
 
-        //
+        // if the current stack is empty and the selected stack is not empty
         if (m_oCurrentStack.IsStackEmpty() && !oCurrentSelectedStack.IsStackEmpty())
         {
-            //
+            // Set the slot content of a new item stack
             SetSlotContent(new ItemStack(oCurrentSelectedStack.GetItem(), 1));
 
             // get a copy of the currently selected stack
             ItemStack oCurrentSelectedStackCopy = oCurrentSelectedStack.CopyStack();
 
-            //
+            // decrease the currently selected count by 1
             oCurrentSelectedStackCopy.DecreaseStack(1);
 
-            //
+            // set the currently selected stack in the manager to this one 
             m_gInventoryManger.SetSelectedStack(oCurrentSelectedStackCopy);
 
             // deactivate the tooltip
             SetTooltip(string.Empty);
         }
 
-        //
+        // if both current stack and selected stack are empty
         if (!m_oCurrentStack.IsStackEmpty() && !oCurrentSelectedStack.IsStackEmpty())
         {
-            //
+            // if the items stacks are equal
             if (ItemStack.AreItemsEqual(oCurrentStackCopy, oCurrentSelectedStack))
             {
-                //
+                // if the current stack has room to add one item
                 if (m_oCurrentStack.IsItemAddable(1))
                 {
-                    //
+                    // increase the count of the current stack
                     oCurrentStackCopy.IncreaseStack(1);
 
-                    //
+                    // set the content of the current slot
                     SetSlotContent(oCurrentStackCopy);
 
                     // get a copy of the currently selected stack
                     ItemStack oCurrentSelectedStackCopy = oCurrentSelectedStack.CopyStack();
 
-                    //
+                    // decrease the count
                     oCurrentSelectedStackCopy.DecreaseStack(1);
 
-                    //
+                    // set the currently selected stack in the manager to this new one 
                     m_gInventoryManger.SetSelectedStack(oCurrentSelectedStackCopy);
 
                     // deactivate the tooltip

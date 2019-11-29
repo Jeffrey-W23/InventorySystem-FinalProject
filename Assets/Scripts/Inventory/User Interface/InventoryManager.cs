@@ -1,7 +1,9 @@
 ﻿//--------------------------------------------------------------------------------------
-// Purpose: 
+// Purpose: The main class for managing the inventory of player and other objects.
 //
-// Description: 
+// Description: This script will handle the opening of an inventory container, making sure
+// only one can be open at once, ensure data can pass between different containers, are 
+// items selected in an inventory, and other general management.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------
@@ -12,45 +14,60 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //--------------------------------------------------------------------------------------
-// f
+// InventoryManager Object. Inheriting from MonoBehaviour.
 //--------------------------------------------------------------------------------------
 public class InventoryManager : MonoBehaviour
 {
-    //
+    // public static inventory manager singleton
     public static InventoryManager m_gInstance;
 
-    //
+    // INVENTORY //
+    //--------------------------------------------------------------------------------------
+    // Title for this section of public values.
+    [Header("Inventory Settings:")]
+
+    // public gameobject for the slot prefab
+    [LabelOverride("Slot Prefab")] [Tooltip("The prefab used to generate slots in an inventory container.")]
     public GameObject m_gSlotPrefab;
 
-    //
+    // public list of container getters 
+    //[LabelOverride("Containers")] [Tooltip("A new array of containers to assign to an inventory system.")] // BREAKS??
     public List<ContainerGetter> m_aoContainers = new List<ContainerGetter>();
-    
-    //
-    private Container m_oCurrentOpenContainer;
 
-    //
-    private ItemStack m_oCurrentSelectedStack = ItemStack.m_oEmpty;
-
-    //
-    private GameObject m_gSelectedStackObject;
-
-    //
-    private SelectedStack m_gSelectedStack;
-
-    //
-    private Tooltip m_gToolTip;
-
-    //
-    private bool m_bIsInventoryOpen = false;
-
-    //
+    // public bool for if the game has a hotbar container
+    [LabelOverride("Is there a Hotbar?")] [Tooltip("Does the player object have a hotbar container.")]
     public bool m_bHasHotbar = false;
 
-    //
-    private Player m_gPlayer;
+    // Leave a space in the inspector.
+    [Space]
+    //--------------------------------------------------------------------------------------
+
+    // PRIVATE VALUES //
+    //--------------------------------------------------------------------------------------
+    // private container for the currently open container.
+    private Container m_oCurrentOpenContainer;
+
+    // private item stack for what stack is currently selected.
+    private ItemStack m_oCurrentSelectedStack = ItemStack.m_oEmpty;
+
+    // private selected stack.
+    private SelectedStack m_gSelectedStack;
+
+    // private tooltip for the seting tooltip
+    private Tooltip m_gToolTip;
+
+    // private bool for if an inventory is open or not.
+    private bool m_bIsInventoryOpen = false;
+    //--------------------------------------------------------------------------------------
+
+    // REMOVE // TEMP // REMOVE // POSSIBLTY //
+    // private player object for getting the player.
+    [HideInInspector]
+    public Player m_gPlayer; // TEMP // NEEDS TO BE PRIVATE // TEMP
+    // REMOVE // TEMP // REMOVE // POSSIBLTY //
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Initialization.
     //--------------------------------------------------------------------------------------
     private void Awake()
     {
@@ -68,7 +85,7 @@ public class InventoryManager : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Update: Function that calls each frame to update game objects.
     //--------------------------------------------------------------------------------------
     private void Update()
     {
@@ -82,7 +99,7 @@ public class InventoryManager : MonoBehaviour
                 if (m_bHasHotbar)
                 {
                     // Open the player hotbar container
-                    OpenContainer(new PlayerHotbarContainer(null, m_gPlayer.GetInventory(), 3));
+                    OpenContainer(new PlayerHotbarContainer(null, m_gPlayer.GetInventory(), m_gPlayer.m_nHotbarSize));
                 }
 
                 // set the inventory opened to false
@@ -98,7 +115,13 @@ public class InventoryManager : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetContainerPrefab: Get the container prefab of a specific title.
+    //
+    // Param:
+    //      strTitle: A string, the title of the prefab to get.
+    //
+    // Return:
+    //      GameObject: Returns a gameobject of the prefab.
     //--------------------------------------------------------------------------------------
     public GameObject GetContainerPrefab(string strTitle)
     {
@@ -118,7 +141,10 @@ public class InventoryManager : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // OpenContainer: Open an inventory container.
+    //
+    // Param:
+    //      nContainer: Takes in container type for which container to open.
     //--------------------------------------------------------------------------------------
     public void OpenContainer(Container nContainer)
     {
@@ -143,7 +169,7 @@ public class InventoryManager : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // CloseContainer: Close the currently open container.
     //--------------------------------------------------------------------------------------
     public void CloseContainer()
     {
@@ -157,12 +183,15 @@ public class InventoryManager : MonoBehaviour
         // set the inventory opened to false
         m_bIsInventoryOpen = false;
 
-        //
+        // freeze the player
         m_gPlayer.SetFreezePlayer(false);
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetCurrentlyOpenContainer: Get the currently opened container.
+    //
+    // Return:
+    //      Container: Return a container type.
     //--------------------------------------------------------------------------------------
     public Container GetCurrentlyOpenContainer()
     {
@@ -171,7 +200,10 @@ public class InventoryManager : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // IsInventoryOpen: Check if a container is currently opened.
+    //
+    // Return:
+    //      bool: return true or false.
     //--------------------------------------------------------------------------------------
     public bool IsInventoryOpen()
     {
@@ -180,19 +212,22 @@ public class InventoryManager : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // ResetInventoryStatus: Reset the current status of the inventory mananger.
     //--------------------------------------------------------------------------------------
     public void ResetInventoryStatus()
     {
         // reset the inventory open status back to false
         m_bIsInventoryOpen = false;
 
-        //
+        // unfreeze the player.
         m_gPlayer.SetFreezePlayer(false);
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetSelectedStack: Get the currently selected item stack object.
+    //
+    // Return:
+    //      ItemStack: returns the item stack currently selected.
     //--------------------------------------------------------------------------------------
     public ItemStack GetSelectedStack()
     {
@@ -201,7 +236,10 @@ public class InventoryManager : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // SetSelectedStack: Set the currently selected item stack.
+    //
+    // Param:
+    //      oStack: Takes in type ItemStack to set currently selected.
     //--------------------------------------------------------------------------------------
     public void SetSelectedStack(ItemStack oStack)
     {
@@ -210,7 +248,10 @@ public class InventoryManager : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // ActivateToolTip: Activate the tooltip object for an item stack.
+    //
+    // Param:
+    //      strTitle: Takes in a string for which tooltip to display.
     //--------------------------------------------------------------------------------------
     public void ActivateToolTip(string strTitle)
     {
@@ -219,7 +260,10 @@ public class InventoryManager : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetPlayerInventory: Get the player inventory.
+    //
+    // Return:
+    //      Inventory: returns an inventory object for the player inventory.
     //--------------------------------------------------------------------------------------
     public Inventory GetPlayerInventory()
     {
@@ -228,14 +272,22 @@ public class InventoryManager : MonoBehaviour
 }
 
 //--------------------------------------------------------------------------------------
-// f
+// ContainerGetter Object.
 //--------------------------------------------------------------------------------------
 [System.Serializable]
 public class ContainerGetter
 {
-    //
+    // CONTAINER SETTINGS //
+    //--------------------------------------------------------------------------------------
+    // Title for this section of public values.
+    [Header("Container Settings:")]
+
+    // public string for the container title.
+    [LabelOverride("Container Title")] [Tooltip("The title of the container to use this prefab.")]
     public string m_strTitle;
 
-    //
+    // public gameobject for prefab
+    [LabelOverride("Container Prefab")] [Tooltip("The prefab to be used by a container class.")]
     public GameObject m_gPrefab;
+    //--------------------------------------------------------------------------------------
 }

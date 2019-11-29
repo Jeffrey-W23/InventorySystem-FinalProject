@@ -1,7 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------
-// Purpose: 
-//
-// Description: 
+// Purpose: Display a tooltip for a hovered or selected item.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------
@@ -13,21 +11,34 @@ using UnityEngine;
 using UnityEngine.UI;
 
 //--------------------------------------------------------------------------------------
-// f
+// Tooltip Object. Inheriting from MonoBehaviour.
 //--------------------------------------------------------------------------------------
 public class Tooltip : MonoBehaviour
 {
-    //
+    // TOOLTIP //
+    //--------------------------------------------------------------------------------------
+    // Title for this section of public values.
+    [Header("Tooltip Settings")]
+
+    // public text object for showing the tooltip.
+    [LabelOverride("Text Object")] [Tooltip("The text object used to show the tooltip.")]
     public Text m_tText;
 
-    //
+    // Leave a space in the inspector.
+    [Space]
+    //--------------------------------------------------------------------------------------
+
+    // PRIVATE VALUES //
+    //--------------------------------------------------------------------------------------
+    // private image for the tooltip back image.
     private Image m_iImage;
 
-    //
+    // private bool for checking if the tooltip can activate.
     private bool m_bHovering;
+    //--------------------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Initialization.
     //--------------------------------------------------------------------------------------
     private void Awake()
     {
@@ -39,7 +50,7 @@ public class Tooltip : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Update: Function that calls each frame to update game objects.
     //--------------------------------------------------------------------------------------
     private void Update()
     {
@@ -52,7 +63,10 @@ public class Tooltip : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // SetTooltip: Set the data needed to display the tooltip / activate the tooltip.
+    //
+    // Param:
+    //      strTitle: The title of the item needing a tooltip.
     //--------------------------------------------------------------------------------------
     public void SetTooltip(string strTitle)
     {

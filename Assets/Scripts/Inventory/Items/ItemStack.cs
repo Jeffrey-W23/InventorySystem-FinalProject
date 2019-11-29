@@ -1,7 +1,9 @@
 ﻿//--------------------------------------------------------------------------------------
-// Purpose: 
+// Purpose: The main logic for an item stack
 //
-// Description: 
+// Description: This script is mostly used for getting and setting the item stack which
+// is used to create a stack of items for an inventory. Every item will be an item stack,
+// even with nothing in the stack.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------
@@ -12,24 +14,24 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //--------------------------------------------------------------------------------------
-// f
+// ItemStack object.
 //--------------------------------------------------------------------------------------
 public class ItemStack
 {
-    //
+    // public static itemstack for an empty item stack
     public static ItemStack m_oEmpty = new ItemStack();
 
-    //
+    // public item for the item of this item stack
     public Item m_oItem;
 
-    //
+    // public int for the count of this item stack
     public int m_nItemCount;
 
-    //
+    // public int for the slot if of this item stack
     public int m_nSlotId;
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Default Constructor.
     //--------------------------------------------------------------------------------------
     public ItemStack()
     {
@@ -40,7 +42,10 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Constructor.
+    //
+    // Param:
+    //      nSlotId: An int for passing in a slot id.
     //--------------------------------------------------------------------------------------
     public ItemStack(int nSlotId)
     {
@@ -51,7 +56,11 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Constructor.
+    //
+    // Param:
+    //      oItem: An Item of passing in an item object.
+    //      nItemCount: An int for passing in the item count.
     //--------------------------------------------------------------------------------------
     public ItemStack(Item oItem, int nItemCount)
     {
@@ -62,7 +71,12 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Constructor.
+    //
+    // Param:
+    //      oItem: An Item of passing in an item object.
+    //      nItemCount: An int for passing in the item count.
+    //      nSlotId: An int for passing in a slot id.
     //--------------------------------------------------------------------------------------
     public ItemStack(Item oItem, int nItemCount, int nSlotId)
     {
@@ -73,7 +87,10 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetItem: Get the item of which this stack is made up of.
+    //
+    // Return:
+    //      Item: item in the stack
     //--------------------------------------------------------------------------------------
     public Item GetItem()
     {
@@ -82,7 +99,10 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetItemCount: Get the item count of the item stack.
+    //
+    // Return:
+    //      int: the number of items in the stack.
     //--------------------------------------------------------------------------------------
     public int GetItemCount()
     {
@@ -91,7 +111,10 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // SetItemCount: Set the item count of the item stack.
+    //
+    // Param:
+    //      nAmount: An int for the amount to set the item count.
     //--------------------------------------------------------------------------------------
     public void SetItemCount(int nAmount)
     {
@@ -100,7 +123,10 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // SetStack: Set up an item stack by assigning an item and a item count.
+    //
+    // Param:
+    //      oStack: An ItemStack for what to set the current itemstack.
     //--------------------------------------------------------------------------------------
     public void SetStack(ItemStack oStack)
     {
@@ -112,7 +138,13 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // SplitStack: Split the item stack in two.
+    //
+    // Param:
+    //      nAmount: An int for the amount to split the item stack.
+    //
+    // Return:
+    //      ItemStack: Return the new item stack that was created with the split.
     //--------------------------------------------------------------------------------------
     public ItemStack SplitStack(int nAmount)
     {
@@ -131,7 +163,10 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // CopyStack: Copy the current item stack.
+    //
+    // Return:
+    //      ItemStack: returns the copy made of the current stack.
     //--------------------------------------------------------------------------------------
     public ItemStack CopyStack()
     {
@@ -140,7 +175,10 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // IsStackEmpty: Check if the item stack is currently empty.
+    //
+    // Return:
+    //      bool: true of false for if the stack is empty.
     //--------------------------------------------------------------------------------------
     public bool IsStackEmpty()
     {
@@ -149,7 +187,13 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // IsItemEqual: Compare the item in two item stacks to check if they are the same.
+    //
+    // Param:
+    //      oStack: An ItemStack which is to be compared.
+    //
+    // Return:
+    //      bool: true or false if these item stacks are the same.
     //--------------------------------------------------------------------------------------
     public bool IsItemEqual(ItemStack oStack)
     {
@@ -158,7 +202,15 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // AreItemsEqual: Comapre the items in to item stacks to check if they are the same.
+    // unlike IsItemEqual, this function is used to check comparisions more closely.
+    //
+    // Param:
+    //      oStack1: An ItemStack for first object to compare.
+    //      oStack2: An ItemStack for the second object to compare.
+    //
+    // Return:
+    //      bool: true or false if these items stacks are equal.
     //--------------------------------------------------------------------------------------
     public static bool AreItemsEqual(ItemStack oStack1, ItemStack oStack2)
     {
@@ -168,7 +220,13 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // IsItemAddable: Check if an item can be added to an ItemStack, if there is space.
+    //
+    // Param:
+    //      nAmount: An int for the amount of items wishing to be added.
+    //
+    // Return:
+    //      bool: true or false if an add is acceptable.
     //--------------------------------------------------------------------------------------
     public bool IsItemAddable(int nAmount)
     {
@@ -177,7 +235,10 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // IncreaseStack: Increase the item count of the item stack.
+    //
+    // Param:
+    //      nAmount: An int for the amount to increase the item stack.
     //--------------------------------------------------------------------------------------
     public void IncreaseStack(int nAmount)
     {
@@ -186,7 +247,10 @@ public class ItemStack
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // DecreaseStack: Decrease the item count of he item stack.
+    //
+    // Param:
+    //      nAmount: An int for the amount to decrease the item stack.
     //--------------------------------------------------------------------------------------
     public void DecreaseStack(int nAmount)
     {

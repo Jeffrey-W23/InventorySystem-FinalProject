@@ -1,7 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------
-// Purpose: 
-//
-// Description: 
+// Purpose: Move the currently selected hotbar index.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------
@@ -13,33 +11,46 @@ using UnityEngine;
 using UnityEngine.UI;
 
 //--------------------------------------------------------------------------------------
-// f
+// HotbarSelector Object. Inheriting from MonoBehaviour.
 //--------------------------------------------------------------------------------------
 public class HotbarSelector : MonoBehaviour
 {
-    //
+    // SELECTOR SETTINGS //
+    //--------------------------------------------------------------------------------------
+    // Title for this section of public values.
+    [Header("Selector Settings:")]
+
+    // public list of gameboject for setting the selectors
+    [LabelOverride("Selector Gameobjects")] [Tooltip("The gameobjects to use for making a selection on the hotbar.")]
     public List<GameObject> m_agSelectors = new List<GameObject>();
 
-    //
+    // Leave a space in the inspector.
+    [Space]
+    //--------------------------------------------------------------------------------------
+
+    // PRIVATE VALUES //
+    //--------------------------------------------------------------------------------------
+    // private inventory manager instance.
     private InventoryManager m_gInventoryManger;
 
-    //
+    // private player object for getting acces to player settings.
     private Player m_gPlayer;
 
-    //
+    // private array of initial keycodes for selecting hotbar index.
     private KeyCode[] m_akInitHotbarControls = new KeyCode[] { KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, 
         KeyCode.Alpha4, KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9 };
 
-    //
+    // private array of needed keycodes for selecting hotbar index. 
     private KeyCode[] m_akHotbarControls;
 
-    //
+    // private int for the currently selected hotbar index.
     private int m_nCurrentlySelected = 0;
+    //--------------------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Initialization.
     //--------------------------------------------------------------------------------------
-    void Awake()
+    private void Awake()
     {
         // get the player game object
         m_gPlayer = FindObjectOfType<Player>();
@@ -63,7 +74,7 @@ public class HotbarSelector : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Initialization.
     //--------------------------------------------------------------------------------------
     private void Start()
     {
@@ -72,18 +83,21 @@ public class HotbarSelector : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Update: Function that calls each frame to update game objects.
     //--------------------------------------------------------------------------------------
-    void Update()
+    private void Update()
     {
         // Update the currently selected item slot
         UpdateCurrentlySelected(Input.GetAxis("Mouse ScrollWheel"));
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // UpdateCurrentlySelected: Move the currently selected hotbar index.
+    //
+    // Param:
+    //      fDirection: float for what direction the scrollwheel should move.
     //--------------------------------------------------------------------------------------
-    private void UpdateCurrentlySelected (float nDirection)
+    private void UpdateCurrentlySelected (float fDirection)
     {
         // loop through each button in the hotbar
         for (int i = 0; i < m_akHotbarControls.Length; i++)
@@ -100,13 +114,13 @@ public class HotbarSelector : MonoBehaviour
         if (!m_gInventoryManger.IsInventoryOpen())
         {
             // check direction of the scrool wheel
-            if (nDirection > 0)
-                nDirection = 1;
-            if (nDirection < 0)
-                nDirection = -1;
+            if (fDirection > 0)
+                fDirection = 1;
+            if (fDirection < 0)
+                fDirection = -1;
 
             // move the selector
-            for (m_nCurrentlySelected -= (int)nDirection; m_nCurrentlySelected < 0; m_nCurrentlySelected += m_agSelectors.Count) ;
+            for (m_nCurrentlySelected -= (int)fDirection; m_nCurrentlySelected < 0; m_nCurrentlySelected += m_agSelectors.Count) ;
 
             // make sure the index stay within horbar slots
             while (m_nCurrentlySelected >= m_agSelectors.Count)
@@ -146,7 +160,10 @@ public class HotbarSelector : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetCurrentlySelected: Get the currently selected slot on the hotbar.
+    //
+    // Return:
+    //      int: an int for what the currently selected hotbar index is.
     //--------------------------------------------------------------------------------------
     public int GetCurrentlySelected()
     {
@@ -155,7 +172,10 @@ public class HotbarSelector : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // SetCurrentlySelected: Set what is currently selected on the hotbar.
+    //
+    // Param:
+    //      nIndex: and int for the index to set the currently selected hotbar.
     //--------------------------------------------------------------------------------------
     public void SetCurrentlySelected(int nIndex)
     {
@@ -164,7 +184,10 @@ public class HotbarSelector : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetCurrentlySelectedItemStack: Get the currently selected item stack in the hotbar.
+    //
+    // Return:
+    //      ItemStack: returns an item stack.
     //--------------------------------------------------------------------------------------
     public ItemStack GetCurrentlySelectedItemStack()
     {

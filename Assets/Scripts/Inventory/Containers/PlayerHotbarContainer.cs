@@ -1,7 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------
-// Purpose: 
-//
-// Description: 
+// Purpose: The main logic for the player hotbar container.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------
@@ -12,12 +10,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //--------------------------------------------------------------------------------------
-// f
+// PlayerHotbarContainer object. Inheriting from Container.
 //--------------------------------------------------------------------------------------
 public class PlayerHotbarContainer : Container
 {
     //--------------------------------------------------------------------------------------
-    // f
+    // Default Constructor.
+    //
+    // Param:
+    //      oInventory: The inventory used for this container.
+    //      oPlayerInventory: The inventory used for the player container.
+    //      nSlots: the amount of slots in the container/inventory.
     //--------------------------------------------------------------------------------------
     public PlayerHotbarContainer(Inventory oInventory, Inventory oPlayerInventory, int nSlots) : base(oInventory, oPlayerInventory, nSlots)
     {
@@ -30,7 +33,10 @@ public class PlayerHotbarContainer : Container
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetPrefab: Get the container prefab for this container. 
+    //
+    // Return:
+    //      GameObject: Returns the prefab of this container.
     //--------------------------------------------------------------------------------------
     public override GameObject GetPrefab()
     {

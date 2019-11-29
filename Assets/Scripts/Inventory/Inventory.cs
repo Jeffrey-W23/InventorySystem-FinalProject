@@ -1,7 +1,8 @@
 ﻿//--------------------------------------------------------------------------------------
-// Purpose: 
+// Purpose: The main logic of the Inventory system.
 //
-// Description: 
+// Description: A simple script for initializing an inventory system and allow adding 
+// items to it.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------
@@ -12,15 +13,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //--------------------------------------------------------------------------------------
-// f
+// Inventory object.
 //--------------------------------------------------------------------------------------
 public class Inventory
 {
-    //
+    // private List of item stack: the inventory array.
     private List<ItemStack> m_aoItems = new List<ItemStack>();
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Default Constructor.
+    //
+    // Param:
+    //      nSize: An int for the size of the inventory system to create.
     //--------------------------------------------------------------------------------------
     public Inventory(int nSize)
     {
@@ -33,7 +37,13 @@ public class Inventory
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // AddItem: Add an item to the inventory system.
+    //
+    // Param:
+    //      oStack: The item stack to add to the inventory system.
+    //
+    // Return:
+    //      bool: return the status of the item adding.
     //--------------------------------------------------------------------------------------
     public bool AddItem(ItemStack oStack)
     {
@@ -83,7 +93,13 @@ public class Inventory
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetStackInSlot: Get the stack in the requested inventory slot.
+    //
+    // Param:
+    //      nIndex: An int for which slot to select.
+    //
+    // Return:
+    //      ItemStack: Return the item stack from that index in the inventory
     //--------------------------------------------------------------------------------------
     public ItemStack GetStackInSlot(int nIndex)
     {
@@ -92,7 +108,10 @@ public class Inventory
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetInventory: Get the inventory list.
+    //
+    // Return:
+    //      List<ItemStack>: return the inventory list.
     //--------------------------------------------------------------------------------------
     public List<ItemStack> GetInventory()
     {

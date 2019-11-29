@@ -325,7 +325,7 @@ public class Player : MonoBehaviour
             if (!m_gInventoryManger.IsInventoryOpen())
             {
                 // Open the player inventory
-                m_gInventoryManger.OpenContainer(new PlayerContainer(null, m_oInventory, m_nInventorySize));
+                m_gInventoryManger.OpenContainer(new PlayerContainer(null, m_oInventory, m_nInventorySize - m_nHotbarSize));
             }
         }
     }

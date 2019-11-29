@@ -1,7 +1,9 @@
 ﻿//--------------------------------------------------------------------------------------
-// Purpose: 
+// Purpose: Logic for the currently selected item stack in an inventory.
 //
-// Description: 
+// Description: This is used for setting and getting the currently selected item stack in
+// an inventory container, not to be confused with the hotbars currently selected which is
+// just for item usage, where as this selected stack is for inventory management.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------
@@ -13,21 +15,35 @@ using UnityEngine;
 using UnityEngine.UI;
 
 //--------------------------------------------------------------------------------------
-// f
+// SelectedStack Object. Inheriting from MonoBehaviour.
 //--------------------------------------------------------------------------------------
 public class SelectedStack : MonoBehaviour
 {
-    //
+    // CURRENT SELECTED //
+    //--------------------------------------------------------------------------------------
+    // Title for this section of public values.
+    [Header("Current Selected Settings")]
+
+    // public image for displaying the item icon.
+    [LabelOverride("Selected Icon")] [Tooltip("The child object used for displaying the currently selected item icon.")]
     public Image m_iIcon;
 
-    //
+    // public text object for the displaying item count.
+    [LabelOverride("Selected Count")] [Tooltip("The child object used for displaying the currently selected item count.")]
     public Text m_tCount;
 
-    //
+    // Leave a space in the inspector.
+    [Space]
+    //--------------------------------------------------------------------------------------
+
+    // PRIVATE VALUES //
+    //--------------------------------------------------------------------------------------
+    // private item stack for the current selected item stack.
     private ItemStack m_oCurrentStack = ItemStack.m_oEmpty;
+    //--------------------------------------------------------------------------------------
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Update: Function that calls each frame to update game objects.
     //--------------------------------------------------------------------------------------
     private void Update()
     {
@@ -39,7 +55,10 @@ public class SelectedStack : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // SetSelectedStack: Set the currently selected item stack.
+    //
+    // Param:
+    //      oStack: and Item Stack for what to set the selected item.
     //--------------------------------------------------------------------------------------
     public void SetSelectedStack(ItemStack oStack)
     {
@@ -48,7 +67,7 @@ public class SelectedStack : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // UpdateSelectedStack: Check and update the currently selected item stack.
     //--------------------------------------------------------------------------------------
     private void UpdateSelectedStack()
     {
@@ -87,7 +106,7 @@ public class SelectedStack : MonoBehaviour
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // DisableSelectedStack: Disable the currently selected item icons and count.
     //--------------------------------------------------------------------------------------
     private void DisableSelectedStack()
     {

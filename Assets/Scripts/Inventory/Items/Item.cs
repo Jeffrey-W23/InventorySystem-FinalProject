@@ -1,7 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------
-// Purpose: 
-//
-// Description: 
+// Purpose: The main script for setting up an item for the use with inventory systems.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------
@@ -12,18 +10,26 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //--------------------------------------------------------------------------------------
-// f
+// Item object. Inheriting from ScriptableObject.
 //--------------------------------------------------------------------------------------
-[CreateAssetMenu(fileName ="New Item")]
+[CreateAssetMenu(fileName ="New Item")] // Create a menu item for quickly creating items
 public class Item : ScriptableObject
 {
-    //
+    // ITEM //
+    //--------------------------------------------------------------------------------------
+    // Title for this section of public values.
+    [Header("Item Settings:")]
+
+    // public string for the item title
+    [LabelOverride("Item Title")] [Tooltip("The title of the item.")]
     public string m_strTitle;
 
-    //
+    // public sprite for the item icon
+    [LabelOverride("Item Icon")] [Tooltip("The icon of the item, for displaying in inventory, etc.")]
     public Sprite m_sIcon;
 
-    //
-    [Range(1, 20)]
+    // public int for the max stack size
+    [LabelOverride("Max Stack Size")] [Tooltip("The max that an item can be stacked in an inventory.")]
     public int m_nMaxStackSize = 20;
+    //--------------------------------------------------------------------------------------
 }

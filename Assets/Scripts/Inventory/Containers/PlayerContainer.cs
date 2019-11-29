@@ -1,7 +1,5 @@
 ﻿//--------------------------------------------------------------------------------------
-// Purpose: 
-//
-// Description: 
+// Purpose: The main logic for the player container.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------
@@ -12,12 +10,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //--------------------------------------------------------------------------------------
-// f
+// PlayerContainer object. Inheriting from Container.
 //--------------------------------------------------------------------------------------
 public class PlayerContainer : Container
 {
     //--------------------------------------------------------------------------------------
-    // f
+    // Default Constructor.
+    //
+    // Param:
+    //      oInventory: The inventory used for this container.
+    //      oPlayerInventory: The inventory used for the player container.
+    //      nSlots: the amount of slots in the container/inventory.
     //--------------------------------------------------------------------------------------
     public PlayerContainer(Inventory oInventory, Inventory oPlayerInventory, int nSlots) : base(oInventory, oPlayerInventory, nSlots)
     {
@@ -25,11 +28,11 @@ public class PlayerContainer : Container
         for (int i = 0; i < m_nSlots; i++)
         {
             // build the inventory slots
-            AddSlot(oPlayerInventory, 3 + i, m_gPrefab.GetComponentInChildren<Transform>().Find("Main Inventory").transform);
+            AddSlot(oPlayerInventory, InventoryManager.m_gInstance.m_gPlayer.m_nHotbarSize + i, m_gPrefab.GetComponentInChildren<Transform>().Find("Main Inventory").transform);
         }
 
         // loop through each slot
-        for (int i = 0; i < m_nSlots - 3; i++)
+        for (int i = 0; i < InventoryManager.m_gInstance.m_gPlayer.m_nHotbarSize; i++)
         {
             // build the inventory slots
             AddSlot(oPlayerInventory, i, m_gPrefab.GetComponentInChildren<Transform>().Find("Hotbar Inventory").transform);
@@ -37,7 +40,10 @@ public class PlayerContainer : Container
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetPrefab: Get the container prefab for this container. 
+    //
+    // Return:
+    //      GameObject: Returns the prefab of this container.
     //--------------------------------------------------------------------------------------
     public override GameObject GetPrefab()
     {

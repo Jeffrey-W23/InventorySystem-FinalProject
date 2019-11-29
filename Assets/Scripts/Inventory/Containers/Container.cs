@@ -1,7 +1,10 @@
 ﻿//--------------------------------------------------------------------------------------
-// Purpose: 
+// Purpose: Object for containing the inventory of an objec.
 //
-// Description: 
+// Description: This class will act as a container for differnt inventorys in the project.
+// so the player will have a container, chest, hotbars or enemies. Like a real container
+// it can be opened and closed and has access to the players contaienr for easily moving 
+// of items from container to container.
 //
 // Author: Thomas Wiltshire
 //--------------------------------------------------------------------------------------
@@ -12,27 +15,32 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //--------------------------------------------------------------------------------------
-// f
+// Container Object.
 //--------------------------------------------------------------------------------------
 public class Container
 {
-    //
+    // protected int for the amount of slots in this container/inventory.
     protected int m_nSlots;
 
-    //
+    // protected gameobject for the prefab of this container.
     protected GameObject m_gPrefab;
 
-    //
+    // protected inventory for the inventory for this container.
     protected Inventory m_oInventory;
 
-    //
+    // protected inventory for the player inventory
     protected Inventory m_oPlayerInventory;
 
-    //
+    // protected list of item slot for the slots of this container.
     protected List<ItemSlot> m_agSlots = new List<ItemSlot>();
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Default Constructor.
+    //
+    // Param:
+    //      oInventory: The inventory used for this container.
+    //      oPlayerInventory: The inventory used for the player container.
+    //      nSlots: the amount of slots in the container/inventory.
     //--------------------------------------------------------------------------------------
     public Container(Inventory oInventory, Inventory oPlayerInventory, int nSlots)
     {
@@ -46,16 +54,21 @@ public class Container
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // AddSlot: Add a new slot to an inventory container.
+    //
+    // Param:
+    //      oInventory: The inventory used for this container.
+    //      nId: The id of the item stack to add to this slot.
+    //      tParent: The parent transform for this slot.
     //--------------------------------------------------------------------------------------
-    public void AddSlot(Inventory oInventory, int nId, Transform m_tParent)
+    public void AddSlot(Inventory oInventory, int nId, Transform tParent)
     {
         // get the slot component
         GameObject gInstance = Object.Instantiate(InventoryManager.m_gInstance.m_gSlotPrefab);
         ItemSlot gSlot = gInstance.GetComponent<ItemSlot>();
 
         // set the postion of the slot to the parent
-        gInstance.transform.SetParent(m_tParent);
+        gInstance.transform.SetParent(tParent);
 
         // add the slot to the slots array
         m_agSlots.Add(gSlot);
@@ -65,7 +78,7 @@ public class Container
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // UpdateSlots: Update all the slots in an Inventory.
     //--------------------------------------------------------------------------------------
     public void UpdateSlots()
     {
@@ -78,7 +91,7 @@ public class Container
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Open: What to do when the container is opened.
     //--------------------------------------------------------------------------------------
     public void Open()
     {
@@ -90,7 +103,7 @@ public class Container
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // Close: What to do when the container is closed.
     //--------------------------------------------------------------------------------------
     public void Close()
     {
@@ -99,7 +112,10 @@ public class Container
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetPrefab: Get the container prefab for this container. 
+    //
+    // Return:
+    //      GameObject: Returns the prefab of this container.
     //--------------------------------------------------------------------------------------
     public virtual GameObject GetPrefab()
     {
@@ -108,7 +124,10 @@ public class Container
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetSpawnedContainer: Get the spawned prefab for this container. 
+    //
+    // Return:
+    //      GameObject: Returns the spawned prefab of this container.
     //--------------------------------------------------------------------------------------
     public GameObject GetSpawnedContainer()
     {
@@ -117,7 +136,22 @@ public class Container
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetContainerSize: Get the size of the container
+    //
+    // Return:
+    //      int: returns the size of the container.
+    //--------------------------------------------------------------------------------------
+    public int GetContainerSize()
+    {
+        // return the container inventory
+        return m_nSlots;
+    }
+
+    //--------------------------------------------------------------------------------------
+    // GetInventory: Get the inventory of this container.
+    //
+    // Return:
+    //      Inventory: returns the inventory of this container.
     //--------------------------------------------------------------------------------------
     public Inventory GetInventory()
     {
@@ -126,7 +160,10 @@ public class Container
     }
 
     //--------------------------------------------------------------------------------------
-    // f
+    // GetPlayerInventory: Get the player inventory.
+    //
+    // Return:
+    //      Inventory: returns the player inventory.
     //--------------------------------------------------------------------------------------
     public Inventory GetPlayerInventory()
     {
